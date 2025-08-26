@@ -12,8 +12,8 @@ export function getGreetAnswer(tag) {
     if (hour < 18) return "Грово разта кой томенте?";
     return "Петормать разта кой томенте?";
   }
-  if (tag === "huue") {
-    return "Гавленного И донерим, кой томенте?";
+  if (tag === "huue" || tag === "↏→" || tag === "чени") {
+    return "Выберго, в Портание";
   }
   return null;
 }
