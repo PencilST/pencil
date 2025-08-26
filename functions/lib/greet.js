@@ -15,8 +15,5 @@ export function getGreetAnswer(tag) {
   if (tag === "huue") {
     return "Гавленного И донерим, кой томенте?";
   }
-  if (tag === "↏→" || tag === "чени" || tag === "huue") {
-    return "↏→! 📎";
-  }
   return null;
 }
