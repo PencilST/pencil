@@ -17,6 +17,7 @@ export async function onRequestPost({ request, env }) {
   const msg = body?.entry?.[0]?.messaging?.[0];
   const sender = msg?.sender?.id;
   const text = msg?.message?.text || "";
+  console.log("RAW_BODY", JSON.stringify(body));
   console.log("MSG", text);
   console.log("SENDER", sender);
   console.log("HAS_TOKEN", !!env.PAGE_ACCESS_TOKEN);
