@@ -1,3 +1,4 @@
+
 // ✅ Facebook Webhook Verification (GET)
 export async function onRequestGet({ request, env }) {
   const url = new URL(request.url);
@@ -28,11 +29,7 @@ export async function onRequestPost({ request, env }) {
             const text = event.message.text;
             console.log("MSG", text);
 
-            await sendMessage(
-              senderId,
-              "Таны мессеж: " + text,
-              env.PAGE_ACCESS_TOKEN
-            );
+            await sendMessage(senderId, "Tᝂ голя : " + text, env.PAGE_ACCESS_TOKEN);
           }
         }
       }
@@ -47,16 +44,16 @@ export async function onRequestPost({ request, env }) {
 
 // ✅ Send message back to Messenger
 async function sendMessage(recipientId, message, PAGE_ACCESS_TOKEN) {
-  const url = `https://graph.facebook.com/v18.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`;
+  const url = `https://graph.facebook.com/v18.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`; 
   const payload = {
     recipient: { id: recipientId },
-    message: { text: message },
+    message: { text: message }
   };
 
   const res = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    body: JSON.stringify( payload)
   });
 
   const data = await res.json();
