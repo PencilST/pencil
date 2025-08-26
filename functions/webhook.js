@@ -1,8 +1,9 @@
 import { normalizeText } from "./lib/normalize.js";
 import { getGreetAnswer } from "./lib/greet.js";
 import { getFaqAnswer } from "./lib/faq.js";
+import { route } from "./lib/brain.js";   // 🟢 БРАИН.ЖС нэмэв
 
-// ✅ Webhook GET баталгаажуулалт
+// 🌐 GET webhook
 export async function onRequestGet({ request, env }) {
   const url = new URL(request.url);
   const mode = url.searchParams.get("hub.mode");
@@ -20,7 +21,7 @@ export async function onRequestGet({ request, env }) {
   return new Response("Forbidden", { status: 403 });
 }
 
-// ✅ POST эвент хүлээж авах
+// 📩 POST webhook (receive messages)
 export async function onRequestPost({ request, env }) {
   try {
     const body = await request.json();
@@ -33,12 +34,16 @@ export async function onRequestPost({ request, env }) {
             const original = event.message.text;
             const tag = normalizeText(original);
 
+            // ✨ Хариулт олох
             let reply = getGreetAnswer(tag);
             if (!reply) {
               reply = getFaqAnswer(tag);
             }
             if (!reply) {
-              reply = "Уучлаарай, ойлгосонгүй. Та 'мэнд' эсвэл 'үнэ' гэж асуугаарай 🙂";
+              reply = route(tag);   // 🟢 БРАИН.ЖС-ээс хариулт авах
+            }
+            if (!reply) {
+              reply = "Задоние?";  // fallback
             }
 
             await sendMessage(senderId, reply, env.PAGE_ACCESS_TOKEN, {});
@@ -54,7 +59,7 @@ export async function onRequestPost({ request, env }) {
   }
 }
 
-// ✅ Илүү найдвартай sendMessage
+// 📨 Message илгээх
 async function sendMessage(recipientId, text, accessToken, opts) {
   const url = `https://graph.facebook.com/v18.0/me/messages?access_token=${accessToken}`;
   const payload = {
