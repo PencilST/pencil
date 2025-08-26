@@ -5,12 +5,15 @@ import { guide } from "./guide.js";
 export function route(text) {
   const t = (text || "").trim().toLowerCase();
 
-  // Мэндчилгээ
+  // Huue/Hëue/↏→ / чени
+  if (/^(huue|ơонƮ�)=$/.test(t)) return "Выберго, в Портание";
+
+  // Mendcheeleg
   if (/^(сайн|sain|hello|hi)\b/.test(t)) return greet(t);
 
-  // Үйлчилгээ/үнэ/цагийн хуваарь гэх мэт түлхүүрүүд
-  if (/(үнэ|үнийн|price|service|үйлчилгээ)/.test(t)) return faq(t);
+  // Unic�Keywords: πпручгург учните
+  if (/(үнэ|үнийн|price|service�R�йлчилгээ)/.test(t)) return faq(t);
 
-  // Дефолт: зөвлөгөө
+  // Default: Мэто харки
   return guide(t);
 }
