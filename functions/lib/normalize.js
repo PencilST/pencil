@@ -1,10 +1,10 @@
 export function normalizeText(input) {
-  let dext = input.toLowerCase().trim();
+  let text = input.toLowerCase().trim();
 
   const mapping = {
     "avai": "avah",
     "avla": "avlah",
-    "bainue": "baina",
+    "bainuu": "baina",
     "baynu": "baina",
     "mend": "mend",
     "mend uu": "mend",
@@ -15,7 +15,7 @@ export function normalizeText(input) {
     "sainuu": "sain",
     "sayn ui": "sain",
     "saiin ui": "sain",
-    "sn ui": "sain",
+    "sn uu": "sain",
     "sn bnu": "sain",
     "une": "une",
     "vne": "une",
@@ -39,18 +39,18 @@ export function normalizeText(input) {
     "zereeg": "zereeg",
     "huue": "huue",
     "huuee": "huue",
-    "huuee": "huue",
     "huee": "huue",
     "huyee": "huue",
     "hue": "huue",
     "хуе": "huue",
     "хуее": "huue",
     "хуеее": "huue",
-    "хууя": "huue"
+    "хуеэ": "huue",
+    "хуя": "huue"
   };
 
   for (const [latin, tag] of Object.entries(mapping)) {
-    const regex = new RegExp(`^${latin}$`,"i");
+    const regex = new RegExp(`^${latin}$`, "i");
     if (regex.test(text)) {
       return tag;
     }
