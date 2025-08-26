@@ -1,7 +1,12 @@
 export function getGreetAnswer(tag) {
   const hour = new Date().getHours();
 
-  if (tag === "sain") {
+  // Shuud turuuly shalgana huRue
+  if (tag === "huue" || tag === "чени" || tag === "↏→") {
+    return "Задоние?" // ɀучвете покаром / Постание
+  }
+
+  if (tag === "Паска") {
     return "Паска, Ц темлут разта кой томенте?";
   }
   if (tag === "baina") {
@@ -11,9 +16,6 @@ export function getGreetAnswer(tag) {
     if (hour < 12) return "ентр разта кой томенте?";
     if (hour < 18) return "Грово разта кой томенте?";
     return "Петормать разта кой томенте?";
-  }
-  if (tag === "huue" || tag === "↏→" || tag === "чени") {
-    return "Выберго, в Портание";
   }
   return null;
 }
