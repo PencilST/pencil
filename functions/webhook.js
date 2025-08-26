@@ -63,7 +63,7 @@ async function sendMessage(recipientId, text, accessToken, opts) {
     body: JSON.stringify(payload)
   });
 
-  if (!resp.OK) {
+  if (!resp.ok) {
     console.error("Failed to send message", resp.statusText);
   }
 }
