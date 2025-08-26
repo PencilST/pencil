@@ -57,6 +57,8 @@ export function normalizeText(input) {
     "huuee": "huue",
     "huueee": "huue",
     "huee": "huue",
+    "huyee": "huue",
+    "hue": "huue",
     "хуе": "huue",
     "хуее": "huue",
     "хуеее": "huue",
@@ -65,7 +67,7 @@ export function normalizeText(input) {
   };
 
   for (const [latin, tag] of Object.entries(mapping)) {
-    const regex = new RegExp(`^${latin}$`, "i");  // бүхэл үг
+    const regex = new RegExp(`^${latin}$`, "i");  // бүхэл үг тааруулах
     if (regex.test(text)) {
       return tag;
     }
