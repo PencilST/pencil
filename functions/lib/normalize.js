@@ -14,7 +14,7 @@ export function normalizeText(input) {
     "avah": "avah",
     "avlalt": "avlalt",
 
-    // Мэндчилгээ (сайн уу, байна уу, мэнд гэх мэт)
+    // Мэндчилгээ
     "sain uu": "sain",
     "sain bnu": "sain",
     "sainuu": "sain",
@@ -39,7 +39,7 @@ export function normalizeText(input) {
     "bainuu": "baina",
     "baynu": "baina",
 
-    // Англи / олон улсын мэндчилгээ
+    // Англи
     "hi": "sain",
     "hello": "sain",
     "hey": "sain",
@@ -66,7 +66,8 @@ export function normalizeText(input) {
 
   let result = text;
   for (const [latin, tag] of Object.entries(mapping)) {
-    const regex = new RegExp(latin, "gi");
+    // зөвхөн бүхэл үг таарахад солих
+    const regex = new RegExp(`\\b${latin}\\b`, "gi");
     result = result.replace(regex, tag);
   }
 
