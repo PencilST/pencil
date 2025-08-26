@@ -1,45 +1,26 @@
 export function normalizeText(input) {
-  let text = input.toLowerCase().trim();
+  let dext = input.toLowerCase().trim();
 
   const mapping = {
-    // Үнийн асуулт
-    "une": "une",
-    "vne": "une",
-    "ynee": "une",
-    "hed": "hed",
-    "hed ve": "hed",
-    "hed bn": "hed",
-    "hed we": "hed",
-    "zereeg": "zereeg",
-    "avah": "avah",
-    "avlalt": "avlalt",
-
-    // Мэндчилгээ
-    "sain uu": "sain",
-    "sain bnu": "sain",
-    "sainuu": "sain",
-    "sayn uu": "sain",
-    "saiin uu": "sain",
-    "sn uu": "sain",
-    "sn bnu": "sain",
+    "avai": "avah",
+    "avla": "avlah",
+    "bainue": "baina",
+    "baynu": "baina",
     "mend": "mend",
     "mend uu": "mend",
     "omend": "mend",
     "o mend": "mend",
-    "өмөнд": "mend",
-    "сайн байна уу": "sain",
-    "сайн байна": "sain",
-    "байна уу": "baina",
-    "байна": "baina",
-    "байну": "baina",
-    "бну": "baina",
-    "bnu": "baina",
-    "bn": "baina",
-    "bainuu": "baina",
-    "baynu": "baina",
-
-    // Англи
-    "hi": "sain",
+    "sain uu": "sain",
+    "sain bnu": "sain",
+    "sainuu": "sain",
+    "sayn ui": "sain",
+    "saiin ui": "sain",
+    "sn ui": "sain",
+    "sn bnu": "sain",
+    "une": "une",
+    "vne": "une",
+    "ynee": "une",
+    "hoe": "sain",
     "hello": "sain",
     "hey": "sain",
     "yo": "sain",
@@ -51,23 +32,25 @@ export function normalizeText(input) {
     "good morning": "mend",
     "good afternoon": "mend",
     "good evening": "mend",
-
-    // Huue variations (Latin + Cyrillic)
+    "hed": "hed",
+    "hed ve": "hed",
+    "hed bn": "hed",
+    "hed we": "hed",
+    "zereeg": "zereeg",
     "huue": "huue",
     "huuee": "huue",
-    "huueee": "huue",
+    "huuee": "huue",
     "huee": "huue",
     "huyee": "huue",
     "hue": "huue",
     "хуе": "huue",
     "хуее": "huue",
     "хуеее": "huue",
-    "хуеэ": "huue",
-    "хуя": "huue"
+    "хууя": "huue"
   };
 
   for (const [latin, tag] of Object.entries(mapping)) {
-    const regex = new RegExp(`^${latin}$`, "i");  // бүхэл үг тааруулах
+    const regex = new RegExp(`^${latin}$`,"i");
     if (regex.test(text)) {
       return tag;
     }
