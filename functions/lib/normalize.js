@@ -1,5 +1,5 @@
 export function normalizeText(input) {
-  let text = input.toLowerCase();
+  let text = input.toLowerCase().trim();
 
   const mapping = {
     // Үнийн асуулт
@@ -35,7 +35,6 @@ export function normalizeText(input) {
     "бну": "baina",
     "bnu": "baina",
     "bn": "baina",
-    "baina uu": "baina",
     "bainuu": "baina",
     "baynu": "baina",
 
@@ -57,6 +56,7 @@ export function normalizeText(input) {
     "huue": "huue",
     "huuee": "huue",
     "huueee": "huue",
+    "huee": "huue",
     "хуе": "huue",
     "хуее": "huue",
     "хуеее": "huue",
@@ -64,12 +64,12 @@ export function normalizeText(input) {
     "хуя": "huue"
   };
 
-  let result = text;
   for (const [latin, tag] of Object.entries(mapping)) {
-    // зөвхөн бүхэл үг таарахад солих
-    const regex = new RegExp(`\\b${latin}\\b`, "gi");
-    result = result.replace(regex, tag);
+    const regex = new RegExp(`^${latin}$`, "i");  // бүхэл үг
+    if (regex.test(text)) {
+      return tag;
+    }
   }
 
-  return result;
+  return text;
 }
