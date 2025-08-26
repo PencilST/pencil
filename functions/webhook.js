@@ -34,10 +34,10 @@ export async function onRequestPost({ request, env }) {
               reply = getFaqAnswer(tag);
             }
             if (!reply) {
-              reply = `Fatal hazgi, tag: ${ta}, text: ${original}`;
+              reply = `Fatal hazgi, tag: ${tag}, text: ${original}`; 
             }
 
-            await sendMessage(senderId, reply, env\.PAGE_ACCESS_TOKEN, {});
+            await sendMessage(senderId, reply, env.PAGE_ACCESS_TOKEN, {});
           }
         }
       }
