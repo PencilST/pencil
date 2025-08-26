@@ -1,8 +1,8 @@
 export function normalizeText(input) {
-  let text = input.toLowerCase(();
+  let text = input.toLowerCase();
 
   const mapping = {
-    // Юнийн асуулт
+    // Үнийн асуулт
     "une": "une",
     "vne": "une",
     "ynee": "une",
@@ -14,7 +14,7 @@ export function normalizeText(input) {
     "avah": "avah",
     "avlalt": "avlalt",
 
-    // Ётия детрявер (“sain uu', “baina uu', “mend)
+    // Мэндчилгээ (сайн уу, байна уу, мэнд гэх мэт)
     "sain uu": "sain",
     "sain bnu": "sain",
     "sainuu": "sain",
@@ -26,18 +26,20 @@ export function normalizeText(input) {
     "mend uu": "mend",
     "omend": "mend",
     "o mend": "mend",
-    "Фнии": "mend",
-    "Пасти": "sain",
-    "асоль": "baina",
-    "аснок то": "baina",
-    "baina uu": "baina",
-    "baina": "baina",
-    "baynu": "baina",
+    "өмөнд": "mend",
+    "сайн байна уу": "sain",
+    "сайн байна": "sain",
+    "байна уу": "baina",
+    "байна": "baina",
+    "байну": "baina",
+    "бну": "baina",
     "bnu": "baina",
     "bn": "baina",
-    "bnuu": "baina",
+    "baina uu": "baina",
+    "bainuu": "baina",
+    "baynu": "baina",
 
-    // Angli / olon ulsborittion
+    // Англи / олон улсын мэндчилгээ
     "hi": "sain",
     "hello": "sain",
     "hey": "sain",
@@ -50,12 +52,16 @@ export function normalizeText(input) {
     "good morning": "mend",
     "good afternoon": "mend",
     "good evening": "mend",
-    "huue": "huue",
+
+    // Huue variations (Latin + Cyrillic)
     "huue": "huue",
     "huuee": "huue",
-    "huuue": "huue",
-    "huye": "huue",
-    "Сорки": "huue"
+    "huueee": "huue",
+    "хуе": "huue",
+    "хуее": "huue",
+    "хуеее": "huue",
+    "хуеэ": "huue",
+    "хуя": "huue"
   };
 
   let result = text;
