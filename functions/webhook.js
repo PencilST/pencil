@@ -1,35 +1,46 @@
-import { route } from "./lib/brain.js";
-
 export async function onRequestPost({ request, env }) {
-  const body = await request.json().catch(()=>({}));
-  const msg = body?.entry?.[0]?.messaging?.[0];
-  const sender = msg?.sender?.id;
-  const text = msg?.message?.text || "";
+  try {
+    const body = await request.json();
+    console.log("RAW_BODY", JSON.stringify(body));
 
-  console.log("MSG", text);
-  console.log("SENDER", sender);
-  console.log("HAS_TOKEN", !!env.PAGE_ACCESS_TOKEN);
+    if (body.object === "page") {
+      for (const entry of body.entry) {
+        for (const event of entry.messaging) {
+          const senderId = event.sender.id;
 
-  const ack = new Response("OK", { status: 200 }); // FB-д түргэн 200 буцаана
+          // Хэрэглэгчээс ирсэн текст
+          if (event.message && event.message.text) {
+            const text = event.message.text;
+            console.log("MSG", text);
 
-  const replyText = route(text);
-  if (sender && replyText && env.PAGE_ACCESS_TOKEN) {
-    try {
-      const url = `https://graph.facebook.com/v23.0/me/messages?access_token=${env.PAGE_ACCESS_TOKEN}`;
-      const res = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          recipient: { id: sender },
-          message: { text: replyText },
-        }),
-      });
-      const txt = await res.text().catch(()=>"(no body)");
-      console.log("FB SEND STATUS", res.status, txt);
-    } catch (e) {
-      console.error("FB SEND ERROR", e);
+            // Хэрэглэгчид буцааж хариу өгөх
+            await sendMessage(senderId, "Таны бичсэн: " + text, env.PAGE_ACCESS_TOKEN);
+          }
+        }
+      }
     }
-  }
 
-  return ack;
+    return new Response("EVENT_RECEIVED", { status: 200 });
+  } catch (err) {
+    console.error("ERR", err);
+    return new Response("Error", { status: 500 });
+  }
+}
+
+// Messenger Send API дуудлага
+async function sendMessage(recipientId, message, PAGE_ACCESS_TOKEN) {
+  const url = `https://graph.facebook.com/v18.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`;
+  const payload = {
+    recipient: { id: recipientId },
+    message: { text: message }
+  };
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+
+  const data = await res.json();
+  console.log("SEND_API_RES", JSON.stringify(data));
 }
