@@ -1,11 +1,12 @@
+import { normalize } from "./normalize.js";
+
 export function getGreetAnswer(text) {
-  const t = text.toLowerCase().trim();
+  const t = normalize(text);
 
-  // Мэндчилгээний түлхүүр үгс
-  const responses = ["hello", "hi", "sain", "сайн уу", "hey", "snuu"];
+  // Мэндчилгээг зөвшөөрөх түлхүүрүүд
+  const responses = ["сайн уу", "hi", "hello", "hey"];
 
-  // Хэрэглэгчийн текстэд дээрх түлхүүр үгсийн аль нэг нь багтсан эсэхийг шалгах
-  if (responses.some(r => t.includes(r))) {
+  if (responses.includes(t)) {
     const hour = new Date().getHours();
     let greeting;
 
@@ -22,9 +23,8 @@ export function getGreetAnswer(text) {
     return `${greeting} Танд юугаар туслах уу?`;
   }
 
-  // Хэрэв хэрэглэгчийн текстэд мэндчилгээний түлхүүр олдохгүй бол
   return "Сайн уу?";
 }
 
-// brain.js-д тааруулах export
+// brain.js-тэй нийцүүлэх export
 export const greet = getGreetAnswer;
