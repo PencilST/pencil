@@ -19,7 +19,7 @@ jobs:
         run: npm install -g wrangler
 
       - name: Publish to Cloudflare
-        run: wrangler deploy --env production --var GIT_COMMIT_SHA:$GIT_COMMIT_SHA
+        run: wrangler deploy --env production --var "GIT_COMMIT_SHA=$GIT_COMMIT_SHA"
         working-directory: cf-worker
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
