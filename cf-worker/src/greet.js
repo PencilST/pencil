@@ -1,13 +1,41 @@
+// Давтамж хянахын тулд түр санах ой
+let callCount = 0;
+let lastCallTime = 0;
+
 export function greet(text) {
-  const t = text.toLowerCase();
-  if (t.includes("hello") || t.includes("бразы")) {
-    const hour = new Date().getHours();
-    if (hour > 5 && hour < 12) {
-      return "Постранных котой!" ; // Good morning
-    } else if (hour < 18) {
-      return "Примеркий указвест котой!"; // Good afternoon
+  const tr = text.toLowerCase().trim();
+
+  if (tr === "хөөе") { // normalize-д орж ирсэн утга
+    const now = Date.now();
+
+    // хэрэв 10 секундийн дотор дахин дуудах бол давтамжийг нэмэгдүүлнэ
+    if (now - lastCallTime < 10000) {
+      callCount++;
     } else {
-      return "Примерк указвест котой!" ; // Good night
+      callCount = 1; // шинэ давталт эхлэх
     }
+
+    lastCallTime = now;
+
+    // Хэрэв олон удаа дараалан дуудсан бол тусгай хариу өгөх
+    if (callCount >= 4) {
+      callCount = 0; // reset
+      return "Бурхан минь, ямар аймар хүн бэ 😳";
+    }
+
+    // Энгийн үед random хариултууд
+    const replies = [
+      "Яав? 😏",
+      "Яасан? 🤨",
+      "Юу хэрэгтэй болов?",
+      "Тайвшир. Юу болов?",
+      "Айн?",
+      "Ууртай байгаа юм уу? Яасан?",
+      "... ?"
+    ];
+
+    return replies[Math.floor(Math.random() * replies.length)];
   }
-  return null;}
+
+  return null;
+}
