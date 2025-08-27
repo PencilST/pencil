@@ -1,7 +1,11 @@
-export function normalizeText(input) {
-  let raw = input.toLowerCase().trim();
+// Хэрэглэгчийн оруулсан текстийг нэг мөрт жигдрүүлнэ
+export function normalize(text) {
+  if (!text) return "";
 
-  const mapping = {
+  let t = text.toLowerCase().trim();
+
+  // Синоним үгсийг нэг хэлбэрт оруулах
+  const synonyms = {
     // --- Мэндчилгээ ---
     "сайн уу": "сайн",
     "сайнуу": "сайн",
@@ -109,13 +113,14 @@ export function normalizeText(input) {
 
   if (mapping[raw]) {
     return mapping[raw];
-  }
+  };
 
-  for (const { pattern, value } of regexRules) {
-    if (pattern.test(raw)) {
-      return value;
+  for (const key in synonyms) {
+    if (t.includes(key)) {
+      t = synonyms[key];
+      break;
     }
   }
 
-  return raw;
+  return t;
 }
