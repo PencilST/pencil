@@ -1,4 +1,3 @@
 export function guide(text) {
-  // Техник/програм зөвлөгөөний түр хариу
-  return "Таны асуудлыг тодруулаарай: ямар төхөөрөмж/програм, ямар алдаа?";
+  return "End tiny asiglaljh boloh commandudyn example: \n- 'sain uu' – mendchileg <br>- 'отово' 〓 virgeziiny une <br>- 'help' – tuslamj avakh";
 }
