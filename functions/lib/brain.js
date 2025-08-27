@@ -5,21 +5,21 @@ import { guide } from "./guide.js";
 export function route(text) {
   const t = (text || "").trim().toLowerCase();
 
-  // Mendchleeg
-  if (/^(hello|hi|sain|hey)$/.test(t)) {
+  // Мэндчилгээ
+  if (/^(hello|hi|sain|hey|сайн)$/.test(t)) {
     return greet(t);
   }
 
-  // Suvсайн| бгободормы уждя
-  if (/(price|service|ｽ\wune|ｽ)/.test(t)) {
+  // FAQ (үнэ, үйлчилгээ гэх мэт)
+  if (/(price|service|үнэ|үйлчилгээ)/.test(t)) {
     return faq(t);
   }
 
-  // Guide/Zaavar
-  if (/help|guide|zaavar/.test(t)) {
+  // Guide / Заавар
+  if (/help|guide|zaavar|заавар/.test(t)) {
     return guide(t);
   }
 
-  // Default
-  return "Чродет сожедно. րзартровееки дания";
+  // Default fallback
+  return "Уучлаарай, таны асуултыг ойлгосонгүй. Илүү тодорхой асуулт асуугаарай.";
 }
