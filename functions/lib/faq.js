@@ -11,5 +11,5 @@ export function getFaqAnswer(text) {
   return responses[t] || "Энэ талаар би сайн мэдэхгүй байна.";
 }
 
-// brain.js import-тэй тааруулахын тулд хуучин нэрээр нь export хийв
+// brain.js-д зориулж alias export нэмсэн
 export const faq = getFaqAnswer;
