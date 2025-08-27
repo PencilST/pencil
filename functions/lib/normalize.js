@@ -12,19 +12,17 @@ export function normalizeText(input) {
     "hi": "сайн",
     "hello": "сайн",
     "hey": "сайн",
-    "yo": "сайн",
     "hiya": "сайн",
+    "yo": "сайн",
     "sup": "сайн",
     "sn": "сайн",
     "snu": "сайн",
 
-    // --- Товчилсон үгс ---
+    // --- Товчилсон ---
     "bna": "байна",
     "bn": "байна",
     "bnu": "байна уу",
     "uu": "уу",
-    "uu?": "уу",
-    "uu!": "уу",
     "hiihvv": "хийх үү",
     "hiih uu": "хийх үү",
 
@@ -32,8 +30,9 @@ export function normalizeText(input) {
     "үнэ": "үнэ",
     "une": "үнэ",
     "price": "үнэ",
-    "priсe": "үнэ", // латин 'c' + кирилл 'с'
+    "priсe": "үнэ",  // латин+cyrillic холилдсон
     "prais": "үнэ",
+    "pрайс": "үнэ",
     "үнэтэй": "үнэ",
     "үнэтэй юу": "үнэ",
 
@@ -54,39 +53,69 @@ export function normalizeText(input) {
     "zaavar": "заавар",
     "lavlah": "заавар",
 
-    // --- Англи/Monglish үгс ---
-    "clip": "клип",
-    "video": "видео",
-    "vid": "видео",
-    "music": "дууг",
-    "song": "дууг",
-    "pic": "зураг",
-    "photo": "зураг",
-    "picture": "зураг",
-    "image": "зураг"
+    // --- Reel (Facebook, Instagram) ---
+    "reel": "reel",
+    "reels": "reel",
+    "reell": "reel",
+    "real": "reel",
+    "ril": "reel",
+    "rilz": "reel",
+    "fb reel": "reel",
+    "facebook reel": "reel",
+    "fbreel": "reel",
+    "fbreels": "reel",
+    "ig reel": "reel",
+    "insta reel": "reel",
+    "instareel": "reel",
+    "ig reels": "reel",
+    "insta reels": "reel",
+    "рил": "reel",
+    "рилс": "reel",
+    "фб рилс": "reel",
+    "фэйсбүүк рилс": "reel",
+    "инстаграм рилс": "reel",
+    "иг рилс": "reel",
+
+    // --- Реклам / Зар ---
+    "reklam": "реклам",
+    "reclam": "реклам",
+    "reklaam": "реклам",
+    "reklama": "реклам",
+    "ad": "реклам",
+    "ads": "реклам",
+    "advert": "реклам",
+    "advertising": "реклам",
+    "promotion": "реклам",
+    "promo": "реклам",
+    "реклам": "реклам",
+    "реклама": "реклам",
+    "зар": "реклам",
+    "зарыг": "реклам",
+    "сурталчилгаа": "реклам",
+    "сурталчилга": "реклам",
+    "промо": "реклам"
   };
 
-  // regex-ээр илүү олон хувилбар таних
   const regexRules = [
     { pattern: /^(h+i+|he+y+|he+l+o+)$/, value: "сайн" }, // hi, hiiii, heyy, hellooo
     { pattern: /^(s+a+i+n+u*|sn+u*|sn)$/, value: "сайн" }, // sain, sainuu, snu
-    { pattern: /^p+ri+ce+$/, value: "үнэ" }, // priicee → үнэ
+    { pattern: /^p+ri+ce+$/, value: "үнэ" },               // priiceee → үнэ
     { pattern: /^(ser+vi+ce+s*|vil+chil+gee)$/, value: "үйлчилгээ" },
     { pattern: /^(hel+p*|gu+i+de+|zaa+var+)$/, value: "заавар" },
+    { pattern: /^reel+s*$/, value: "reel" },
+    { pattern: /^rekl+am+$/, value: "реклам" },
+    { pattern: /^ads?$/, value: "реклам" },
   ];
 
-  // 1) exact match
   if (mapping[raw]) {
     return mapping[raw];
   }
 
-  // 2) regex match
   for (const { pattern, value } of regexRules) {
     if (pattern.test(raw)) {
       return value;
     }
   }
 
-  // 3) default
   return raw;
 }
