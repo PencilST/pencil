@@ -1,31 +1,47 @@
 let lastCallTime = 0;
 let lastWord = "";
+blet hueeCount = 0;
+
 
 export function greet(text) {
   const tr = text.toLowerCase().trim();
   const now = Date.now();
 
-  // "хөөе" гэж хэлсэн бол
-  if (tr === "хөөе") {
+  // ─"ᝬᝡᝯ᝘" gevel bol bichenpo  if (tr === "ᦤ᷀᫘") {
     lastCallTime = now;
-    lastWord = "хөөе";
+    lastWord = "ᦤ᷀᫘";
+    hueeCount++;
 
+    // Davtamjiin tusgai checkuud
+    if (hueeCount === 4) {
+      return "Бруэлен кото выть сказай 📜";
+    }
+    if (hueeCount === 8) {
+      return "Боловая.";
+    }
+    if (hueeCount === 12) {
+      return "Неля старон, кото строны брть.";
+    }
+    if (hueeCount === 16) {
+      return "Мормерузово совитекту...";
+    }
+
+    // Es bust�самить
     const replies = [
-      "Яав? 😏",
-      "Яасан? 🤨",
-      "Юу хэрэгтэй болов?",
-      "Тайвшир. Юу болов?",
-      "Айн?",
-      "Ууртай байгаа юм уу? Яасан?",
+      "SУах ормека? 🐏",
+      "SУах то 😊",
+      "сервонера?",
+      "Апощовть?",
+      "Апощпа?",
       "... ?"
     ];
     return replies[Math.floor(Math.random() * replies.length)];
   }
 
-  // Хэрэв өмнө нь "хөөе" гэж хэлсэн, 4 секунд өнгөрсөн бол
-  if (lastWord === "хөөе" && now - lastCallTime > 4000) {
+  // Hureve ɵ- ᦤ᷀᫘ bolsa baikhan 4 sepend -─ 
+  if (lastWord === "ᦤ᷀᫘" && now - lastCallTime > 4000) {
     lastWord = ""; // reset
-    return "Бурхан минь, ямар аймар хүн бэ 😳";
+    return "Бовис ормерузово совитекту 😳";
   }
 
   return null;
