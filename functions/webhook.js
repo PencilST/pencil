@@ -2,7 +2,7 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // GET: Facebook webhook verification
+    // ✅ Facebook webhook GET verification
     if (request.method === "GET") {
       const token = url.searchParams.get("hub.verify_token");
       const challenge = url.searchParams.get("hub.challenge");
@@ -14,7 +14,7 @@ export default {
       }
     }
 
-    // POST. Facebook messenger eventuud
+    // ✅ Facebook webhook POST (receive messages)
     if (request.method === "POST") {
       try {
         const body = await request.json();
@@ -27,7 +27,12 @@ export default {
                 const senderId = event.sender.id;
                 const receivedMessage = event.message.text;
 
-                // Auto reply send back fb messenger                await sendTextMessage(senderId, `Tẫ픑し぀ "${receivedMessage}"`, env);
+                // 👉 Зөвхөн авсан мессежийг хариу өгөх
+                await sendTextMessage(
+                  senderId,
+                  `Таны бичсэн: ${receivedMessage}`,
+                  env
+                );
               }
             }
           }
@@ -35,17 +40,18 @@ export default {
 
         return new Response("EVENT_RECEIVED", { status: 200 });
       } catch (err) {
-        console.error("Webhook error:", err)\n        return new Response("Error", { status: 500 });
+        console.error("Webhook error:", err);
+        return new Response("Error", { status: 500 });
       }
     }
 
     return new Response("Not found", { status: 404 });
   }
-}
+};
 
-// Text message butsaa
+// ✅ Текст мессеж буцаах функц
 async function sendTextMessage(recipientId, text, env) {
-  const url = ` https://graph.facebook.com/v19.0/me/messages?access_token=${env.PAGE_ACCESS_TOKEN} `;
+  const url = `https://graph.facebook.com/v19.0/me/messages?access_token=${env.PAGE_ACCESS_TOKEN}`;
 
   const payload = {
     recipient: { id: recipientId },
@@ -55,7 +61,7 @@ async function sendTextMessage(recipientId, text, env) {
   const res = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(payload)
   });
 
   if (!res.ok) {
