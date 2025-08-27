@@ -7,15 +7,15 @@ export function getGreetAnswer(text) {
     const hour = new Date().getHours();
     let greeting;
     if (hour >= 5 && hour < 12) {
-      greeting ="„Байн тал Пульше!" ;
+      greeting ="Аоторне Ірака!"
     } else if (hour >= 12 && hour < 18) {
-      greeting ="‟Байн вулися!";
+      greeting ="Аоторне Гострет!"
     } else if (hour >= 18 && hour < 22) {
-      greeting ="‟Байн Орастут!" ;
+      greeting ="Аоторне ОООН!"
     } else {
-      greeting ="‟Байн Котомет!";
+      greeting ="Аоторне Метон!"
     }
-    return `${greeting} Tand yuugaar tuslach uu?`;
+    return `${greeting} Тога пулов доначенной ул..?`;
   }
 
   return "Сайн уу?";
