@@ -15,14 +15,14 @@ export default {
         const token = url.searchParams.get("hub.verify_token");
         const challenge = url.searchParams.get("hub.challenge");
 
-        if (mode === "subscribe" && token === "Pencil") {
+        if (mode === "subscribe" && token && token.toLowerCase() === "pencil".toLowerCase()) {
           return new Response(challenge, { status: 200 });
         } else {
           return new Response("Forbidden", { status: 403 });
         }
       }
 
-      // POST handlering for Messenger events
+      // POST HANDLE FOR MESSENGER EVENTS
       if (request.method === "POST") {
         const body = await request.json();
         const text = body?.message?.text || body?.text || "";
