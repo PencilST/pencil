@@ -3,10 +3,7 @@ import { normalize } from "./normalize.js";
 export function getGreetAnswer(text) {
   const t = normalize(text);
 
-  // Мэндчилгээг зөвшөөрөх түлхүүрүүд
-  const responses = ["сайн уу", "hi", "hello", "hey"];
-
-  if (responses.includes(t)) {
+  if (t === "сайн") {
     const hour = new Date().getHours();
     let greeting;
 
@@ -26,5 +23,4 @@ export function getGreetAnswer(text) {
   return "Сайн уу?";
 }
 
-// brain.js-тэй нийцүүлэх export
 export const greet = getGreetAnswer;
