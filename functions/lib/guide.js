@@ -1,3 +1,6 @@
 export function guide(text) {
-  return "End tiny asiglaljh boloh commandudyn example: \n- 'sain uu' – mendchileg <br>- 'отово' 〓 virgeziiny une <br>- 'help' – tuslamj avakh";
+  return "Энд таны ашиглаж болох командуудын жишээ:\n" +
+         "- 'сайн уу' → мэндчилгээ\n" +
+         "- 'үнэ' → үйлчилгээний үнэ\n" +
+         "- 'help' → тусламж авах";
 }
