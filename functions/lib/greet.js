@@ -23,5 +23,5 @@ export function getGreetAnswer(text) {
   return "Сайн уу?";
 }
 
-// brain.js-тэй нийцүүлэхийн тулд хуучин нэрээр нь alias export хийв
+// brain.js import-тэй тааруулахын тулд хуучин нэрээр нь export хийв
 export const greet = getGreetAnswer;
