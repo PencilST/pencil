@@ -1,3 +1,9 @@
 name = "pencil-bot"
-main = "src/index.js"
-compatibility_date = "2024-11-12"
+main = "worker.js"
+type = "javascript"
+account_id = "2753dad2f17d6d3875b7fc442a1fe984"
+workers_dev = true
+compatibility_date = "2023-01-01"
+
+[env.production]
+name = "pencil-bot-prod"
