@@ -1,14 +1,21 @@
 export function getFaqAnswer(text) {
-  const t = text.toLowerCase();
+  const t = text.toLowerCase().trim();
 
-  const responses = {
-    "what is your name": "Би Pencil chatbot байна.",
-    "чи хэн бэ": "Би Pencil chatbot байна.",
-    "what can you do": "Би таны асуултад хариулж чадна.",
-    "чи юу хийж чаддаг юм": "Би таны асуултад хариулж чадна."
-  };
+  // Асуултуудын түлхүүр үгс ба хариултууд
+  const responses = [
+    { keys: ["what is your name", "чи хэн бэ"], answer: "Би Pencil chatbot байна." },
+    { keys: ["what can you do", "чи юу хийж чаддаг юм"], answer: "Би таны асуултад хариулж чадна." }
+  ];
 
-  return responses[t] || "Энэ талаар би сайн мэдэхгүй байна.";
+  // Хэрэглэгчийн текстэд аль нэг түлхүүр багтсан эсэхийг шалгана
+  for (const r of responses) {
+    if (r.keys.some(k => t.includes(k))) {
+      return r.answer;
+    }
+  }
+
+  // Хэрэв тохирох асуулт олдохгүй бол
+  return "Энэ талаар би сайн мэдэхгүй байна.";
 }
 
 // brain.js-д тааруулах export
