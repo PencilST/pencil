@@ -2,7 +2,7 @@ export function getFaqAnswer(text) {
   const t = text.toLowerCase();
 
   const responses = {
-    "what is your name": "Би Pencil chatbot байна.",
+    "what is your name": "Би Харандаа туслах байна.",
     "чи хэн бэ": "Би Харандаа туслах байна.",
     "what can you do": "Би таны асуултад хариулж чадна.",
     "чи юу хийж чаддаг юм": "Би таны асуултад хариулж чадна."
