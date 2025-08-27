@@ -11,6 +11,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Install Wrangler
+        run: npm install -g wrangler
+
       - name: Set Git commit SHA
         run: echo "GIT_COMMIT_SHA=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
