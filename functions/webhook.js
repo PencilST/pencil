@@ -15,15 +15,11 @@ export async function onRequestPost({ request, env }) {
             const original = event.message.text;
             const tag = normalizeText(original);
 
-            let reply = getGreetAnswer(tag);
+            // Гурван үе шаттай шалгалт (мэндчилгээ → FAQ → бусад)
+            let reply = getGreetAnswer(tag) || getFaqAnswer(tag) || route(tag);
+
             if (!reply) {
-              reply = getFaqAnswer(tag);
-            }
-            if (!reply) {
-              reply = route(tag);
-            }
-            if (!reply) {
-              reply = "Uuchlaarai, ворс вых карты честровых польствет миния?";
+              reply = "Уучлаарай, таны асуултыг ойлгосонгүй. Та илүү тодорхой асуулт асуугаарай.";
             }
 
             await sendMessage(senderId, reply, env.PAGE_ACCESS_TOKEN, {});
@@ -33,7 +29,9 @@ export async function onRequestPost({ request, env }) {
     }
     return new Response("EVENT_RECEIVED", { status: 200 });
   } catch (err) {
-    console.error("err", err);
+    console.error("Server error:", err);
+
+    // Серверийн алдаа гарсан үед хэрэглэгчид мэдэгдэх fallback
     return new Response("Error", { status: 500 });
   }
 }
