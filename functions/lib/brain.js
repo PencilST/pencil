@@ -1,15 +1,20 @@
-export function getFaqAnswer(text) {
-  const t = text.toLowerCase();
+import { greet } from "./greet.js";
+import { faq } from "./faq.js";
 
-  const responses = {
-    "what is your name": "Би Pencil chatbot байна.",
-    "чи хэн бэ": "Би Pencil chatbot байна.",
-    "what can you do": "Би таны асуултад хариулж чадна.",
-    "чи юу хийж чаддаг юм": "Би таны асуултад хариулж чадна."
-  };
+export function brain(text) {
+  const t = text.toLowerCase().trim();
 
-  return responses[t] || "Энэ талаар би сайн мэдэхгүй байна.";
+  // Эхлээд мэндчилгээг шалгана
+  if (["hi", "hello", "sain", "сайн уу", "hey", "snuu"].some(r => t.includes(r))) {
+    return greet(text);
+  }
+
+  // Дараа нь FAQ-г шалгана
+  const faqAnswer = faq(text);
+  if (faqAnswer !== "Энэ талаар би сайн мэдэхгүй байна.") {
+    return faqAnswer;
+  }
+
+  // Хэрэв аль нь ч биш бол default хариу
+  return "Энэ талаар би сайн мэдэхгүй байна.";
 }
-
-// brain.js import-тэй тааруулахын тулд хуучин нэрээр нь export хийв
-export const faq = getFaqAnswer;
