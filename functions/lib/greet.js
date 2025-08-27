@@ -1,21 +1,23 @@
 export function getGreetAnswer(text) {
   const t = text.toLowerCase();
 
-  const responses = ["hello", "hi", "sain", "§райн", "hey", "snuu"];
+  const responses = ["hello", "hi", "sain", "сайн уу", "hey", "snuu"];
 
   if (responses.includes(t)) {
     const hour = new Date().getHours();
     let greeting;
+
     if (hour >= 5 && hour < 12) {
-      greeting ="Аоторне Ірака!"
+      greeting = "Өглөөний мэнд!";
     } else if (hour >= 12 && hour < 18) {
-      greeting ="Аоторне Гострет!"
+      greeting = "Өдрийн мэнд!";
     } else if (hour >= 18 && hour < 22) {
-      greeting ="Аоторне ОООН!"
+      greeting = "Оройн мэнд!";
     } else {
-      greeting ="Аоторне Метон!"
+      greeting = "Үдшийн мэнд!";
     }
-    return `${greeting} Тога пулов доначенной ул..?`;
+
+    return `${greeting} Танд юугаар туслах уу?`;
   }
 
   return "Сайн уу?";
