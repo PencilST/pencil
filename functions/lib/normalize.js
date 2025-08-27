@@ -4,7 +4,7 @@ export function normalize(text) {
 
   let t = text.toLowerCase().trim();
 
-  // Синоним үгсийг нэг хэлбэрт оруулах
+  // --- Dictionary mapping ---
   const synonyms = {
     // --- Мэндчилгээ ---
     "сайн уу": "сайн",
@@ -34,7 +34,7 @@ export function normalize(text) {
     "үнэ": "үнэ",
     "une": "үнэ",
     "price": "үнэ",
-    "priсe": "үнэ",  // латин+cyrillic холилдсон
+    "priсe": "үнэ", // латин+cyrillic холилдсон
     "prais": "үнэ",
     "pрайс": "үнэ",
     "үнэтэй": "үнэ",
@@ -100,25 +100,27 @@ export function normalize(text) {
     "промо": "реклам"
   };
 
+  // --- Regex дүрмүүд ---
   const regexRules = [
-    { pattern: /^(h+i+|he+y+|he+l+o+)$/, value: "сайн" }, // hi, hiiii, heyy, hellooo
-    { pattern: /^(s+a+i+n+u*|sn+u*|sn)$/, value: "сайн" }, // sain, sainuu, snu
-    { pattern: /^p+ri+ce+$/, value: "үнэ" },               // priiceee → үнэ
+    { pattern: /^(h+i+|he+y+|he+l+o+)$/, value: "сайн" },     // hi, hiiii, heyy, hellooo
+    { pattern: /^(s+a+i+n+u*|sn+u*|sn)$/, value: "сайн" },   // sain, sainuu, snu
+    { pattern: /^p+ri+ce+$/, value: "үнэ" },                 // priiceee → үнэ
     { pattern: /^(ser+vi+ce+s*|vil+chil+gee)$/, value: "үйлчилгээ" },
     { pattern: /^(hel+p*|gu+i+de+|zaa+var+)$/, value: "заавар" },
     { pattern: /^reel+s*$/, value: "reel" },
     { pattern: /^rekl+am+$/, value: "реклам" },
-    { pattern: /^ads?$/, value: "реклам" },
+    { pattern: /^ads?$/, value: "реклам" }
   ];
 
-  if (mapping[raw]) {
-    return mapping[raw];
-  };
+  // Dictionary-оос шалгах
+  if (synonyms[t]) {
+    return synonyms[t];
+  }
 
-  for (const key in synonyms) {
-    if (t.includes(key)) {
-      t = synonyms[key];
-      break;
+  // Regex дүрмүүдээс шалгах
+  for (const rule of regexRules) {
+    if (rule.pattern.test(t)) {
+      return rule.value;
     }
   }
 
