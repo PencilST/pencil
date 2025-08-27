@@ -2,12 +2,12 @@ export function getGreetAnswer(text) {
   const t = text.toLowerCase();
 
   const responses = {
-    "hello": "Сого сого!",
-    "hi": "Чатявая!",
-    "sain": "Сого сого!",
-    "howay": "Чатявая!",
-    "hey": "Чатявая!"
+    "hello": "Сайн байна уу!",
+    "hi": "Сайн уу!",
+    "sain": "Сайн уу!",
+    "сайн": "Сайн байна уу!",
+    "hey": "Сайн уу!"
   };
 
-  return responses[t] || "";
+  return responses[t] || "Сайн уу?";
 }
