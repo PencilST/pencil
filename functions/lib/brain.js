@@ -6,11 +6,11 @@ export function route(text) {
   const t = (text || "").trim().toLowerCase();
 
   // Мэндчилгээ
-  if (/^(hello|hi|sain|hey|сайн)$/.test(t)) {
+  if (/^(hello|hi|sain|сайн|hey)$/.test(t)) {
     return greet(t);
   }
 
-  // FAQ (үнэ, үйлчилгээ гэх мэт)
+  // FAQ (үнэ, үйлчилгээ)
   if (/(price|service|үнэ|үйлчилгээ)/.test(t)) {
     return faq(t);
   }
