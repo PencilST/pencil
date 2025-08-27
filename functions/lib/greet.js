@@ -1,9 +1,11 @@
 export function getGreetAnswer(text) {
-  const t = text.toLowerCase();
+  const t = text.toLowerCase().trim();
 
+  // Мэндчилгээний түлхүүр үгс
   const responses = ["hello", "hi", "sain", "сайн уу", "hey", "snuu"];
 
-  if (responses.includes(t)) {
+  // Хэрэглэгчийн текстэд дээрх түлхүүр үгсийн аль нэг нь багтсан эсэхийг шалгах
+  if (responses.some(r => t.includes(r))) {
     const hour = new Date().getHours();
     let greeting;
 
@@ -20,6 +22,7 @@ export function getGreetAnswer(text) {
     return `${greeting} Танд юугаар туслах уу?`;
   }
 
+  // Хэрэв хэрэглэгчийн текстэд мэндчилгээний түлхүүр олдохгүй бол
   return "Сайн уу?";
 }
 
