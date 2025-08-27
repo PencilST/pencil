@@ -1,9 +1,12 @@
 export function getGreetAnswer(text) {
-  const t = text;
+  const t = text.toLowerCase();
 
   const responses = {
-    "hellot": "Билазной",
-    "howay": "Бадирующа дания"
+    "hello": "Сого сого!",
+    "hi": "Чатявая!",
+    "sain": "Сого сого!",
+    "howay": "Чатявая!",
+    "hey": "Чатявая!"
   };
 
   return responses[t] || "";
