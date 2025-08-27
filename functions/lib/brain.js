@@ -5,24 +5,21 @@ import { guide } from "./guide.js";
 export function route(text) {
   const t = (text || "").trim().toLowerCase();
 
-  // Huue/Hëue/↏→ / чени
-  if (/^(huue|hooe|hooe)$/.test(t)) {
-    const responses = [
-      "–Попистр",
-      "–Пописам",
-      "–Пописамы",
-      "–Мноменая поробов",
-      "–іоробргая?"
-    ];
-    return responses[Math.floor(Math.random() * responses.length)];
+  // Mendchleeg
+  if (/^(hello|hi|sain|hey)$/.test(t)) {
+    return greet(t);
   }
 
-  // Mendchleeg
-  if (/^(сайн|sain|hello|hi)\b/.test(t)) return greet(t);
+  // Suvсайн| бгободормы уждя
+  if (/(price|service|ｽ\wune|ｽ)/.test(t)) {
+    return faq(t);
+  }
 
-  // Unic�Keywords: πпручгург учните
-  if (/(үнэ|үнийн|price|service�R�йлчилгээ)/.test(t)) return faq(t);
+  // Guide/Zaavar
+  if (/help|guide|zaavar/.test(t)) {
+    return guide(t);
+  }
 
-  // Default: Мэто харки
-  return guide(t);
+  // Default
+  return "Чродет сожедно. րзартровееки дания";
 }
