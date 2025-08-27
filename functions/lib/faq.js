@@ -1,9 +1,15 @@
-export function getFaqAnswer(tag) {
-  if (tag === "une" || tag === "үнэ") {
-    return "Манай үйлчилгээний үнэ нь төрөл, хэмжээ, нөхцлөөс хамаарч өөр өөр байдаг. Дэлгэрэнгүй мэдээллийг ажилтнаас лавлаарай.";
-  }
-  if (tag === "service" || tag === "үйлчилгээ") {
-    return "Манай үйлчилгээний талаар дэлгэрэнгүй мэдээллийг авахыг хүсвэл студийн ажилтантай холбогдоорой.";
-  }
-  return null;
+export function getFaqAnswer(text) {
+  const t = text.toLowerCase();
+
+  const responses = {
+    "what is your name": "Би Pencil chatbot байна.",
+    "чи хэн бэ": "Би Харандаа туслах байна.",
+    "what can you do": "Би таны асуултад хариулж чадна.",
+    "чи юу хийж чаддаг юм": "Би таны асуултад хариулж чадна."
+  };
+
+  return responses[t] || "Энэ талаар би сайн мэдэхгүй байна.";
 }
+
+// brain.js-тэй нийцүүлэхийн тулд хуучин нэрээр нь alias export хийв
+export const faq = getFaqAnswer;
