@@ -1,25 +1,15 @@
-import { greet } from "./greet.js";
-import { faq } from "./faq.js";
-import { guide } from "./guide.js";
+export function getFaqAnswer(text) {
+  const t = text.toLowerCase();
 
-export function route(text) {
-  const t = (text || "").trim().toLowerCase();
+  const responses = {
+    "what is your name": "Би Pencil chatbot байна.",
+    "чи хэн бэ": "Би Pencil chatbot байна.",
+    "what can you do": "Би таны асуултад хариулж чадна.",
+    "чи юу хийж чаддаг юм": "Би таны асуултад хариулж чадна."
+  };
 
-  // Мэндчилгээ
-  if (/^(hello|hi|sain|сайн|hey)$/.test(t)) {
-    return greet(t);
-  }
-
-  // FAQ (үнэ, үйлчилгээ)
-  if (/(price|service|үнэ|үйлчилгээ)/.test(t)) {
-    return faq(t);
-  }
-
-  // Guide / Заавар
-  if (/help|guide|zaavar|заавар/.test(t)) {
-    return guide(t);
-  }
-
-  // Default fallback
-  return "Уучлаарай, таны асуултыг ойлгосонгүй. Илүү тодорхой асуулт асуугаарай.";
+  return responses[t] || "Энэ талаар би сайн мэдэхгүй байна.";
 }
+
+// brain.js import-тэй тааруулахын тулд хуучин нэрээр нь export хийв
+export const faq = getFaqAnswer;
