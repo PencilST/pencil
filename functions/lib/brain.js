@@ -4,13 +4,14 @@ import { faq } from "./faq.js";
 export function brain(text) {
   const t = text.toLowerCase().trim();
 
-  // Эхлээд мэндчилгээг шалгана
-  if (["hi", "hello", "sain", "сайн уу", "hey", "snuu"].some(r => t.includes(r))) {
-    return greet(text);
+  // Эхлээд greet руу явуулна
+  const greetAnswer = greet(t);
+  if (greetAnswer !== "Сайн уу?") {
+    return greetAnswer;
   }
 
   // Дараа нь FAQ-г шалгана
-  const faqAnswer = faq(text);
+  const faqAnswer = faq(t);
   if (faqAnswer !== "Энэ талаар би сайн мэдэхгүй байна.") {
     return faqAnswer;
   }
