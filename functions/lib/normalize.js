@@ -1,7 +1,7 @@
 export function normalizeText(input) {
   let raw = input.toLowerCase().trim();
 
-  // ✅ Бүх хувилбаруудыг зөв нэг үгэнд буулгах mapping
+  // ✅ Хэрэглэгчийн алдаатай, латин/кирилл холилдсон үгсийг зөв хэлбэрт буулгах mapping
   const mapping = {
     // --- Мэндчилгээ ---
     "сайн уу": "сайн",
@@ -32,7 +32,7 @@ export function normalizeText(input) {
     "үнэтэй юу": "үнэ",
     "yune": "үнэ",
     "unet": "үнэ",
-    "priсe": "үнэ", // латин-c/кирилл-с холилдсон
+    "priсe": "үнэ",  // латин 'c' + кирилл 'с' холилдсон
     "pрайс": "үнэ",
 
     // --- Үйлчилгээ ---
@@ -52,20 +52,29 @@ export function normalizeText(input) {
     "hel": "заавар",
     "zaavar": "заавар",
     "lavlah": "заавар",
-
-    // --- Буруу бичлэгүүд ---
-    "сайн уу?": "сайн",
-    "сайн уу!": "сайн",
-    "хаау ар ю": "сайн",
-    "сайн уу гө": "сайн"
   };
 
-  // 🚀 Бүх mapping-оор гүйлгэж таарах бол нормчилно
-  for (const [key, val] of Object.entries(mapping)) {
-    if (raw === key) {
-      return val;
+  // ✅ Regex-нүүрс (жижиг вариацуудыг багтаах)
+  const regexRules = [
+    { pattern: /^(h+i+|he+y+|he+l+o+)$/, value: "сайн" }, // hi, hiiii, heyy, hellooo
+    { pattern: /^(s+a+i+n+u*|sn+u*|sn)$/, value: "сайн" }, // sain, sainuu, snu, sn
+    { pattern: /^p+ri+ce+$/, value: "үнэ" }, // priicee → үнэ
+    { pattern: /^(ser+vi+ce+s*|vil+chil+gee)$/, value: "үйлчилгээ" }, // service, services, vilchilgee
+    { pattern: /^(hel+p*|gu+i+de+|zaa+var+)$/, value: "заавар" }, // help, helpp, guide, zaavar
+  ];
+
+  // 1) Exact match (mapping)
+  if (mapping[raw]) {
+    return mapping[raw];
+  }
+
+  // 2) Regex match
+  for (const { pattern, value } of regexRules) {
+    if (pattern.test(raw)) {
+      return value;
     }
   }
 
+  // 3) Default → буцааж өгнө
   return raw;
 }
