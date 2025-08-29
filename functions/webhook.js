@@ -5,13 +5,13 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // ✅ Persistent Menu setup endpoint
+    // 🟢 Persistent Menu setup endpoint
     if (url.pathname === "/setup-menu" && request.method === "GET") {
       const result = await setupPersistentMenu(env.PAGE_ACCESS_TOKEN);
       return new Response("Persistent Menu configured! " + JSON.stringify(result), { status: 200 });
     }
 
-    // ✅ Facebook webhook verification
+    // 🟢 Facebook webhook verification
     if (request.method === "GET") {
       const token = url.searchParams.get("hub.verify_token");
       const challenge = url.searchParams.get("hub.challenge");
@@ -22,7 +22,7 @@ export default {
       }
     }
 
-    // ✅ Handle incoming messages
+    // 🟢 Handle incoming messages
     if (request.method === "POST") {
       try {
         const raw = await request.text();
@@ -35,7 +35,7 @@ export default {
           return new Response("Invalid JSON", { status: 400 });
         }
 
-        console.log("📥 Incoming webhook body:", JSON.stringify(body, null, 2));
+        console.log("📩 Incoming webhook body:", JSON.stringify(body, null, 2));
 
         if (body?.entry) {
           for (const entry of body.entry) {
@@ -55,13 +55,17 @@ export default {
               } else if (payload === "CONTACT_ADDRESS") {
                 await sendText(
                   senderId,
-                  "🏢 Манай студи:\n📍 Хаяг: УБ, ...\n📞 Утас: +976 88302221\n✉️ Имэйл: info@studio.mn",
+                  "🏢 Манай хаяг:\n📍 Улаанбаатар, ...\n📞 Утас: +976 99112233\n✉️ Имэйл: info@studio.mn",
                   env.PAGE_ACCESS_TOKEN
                 );
               } else if (payload === "CONTACT_PROFILES") {
-                await sendText(senderId, "👩‍🎨 Ажилчдын профайл", env.PAGE_ACCESS_TOKEN);
+                await sendText(senderId, "🌐 Манай профайлууд:", env.PAGE_ACCESS_TOKEN);
               } else if (payload === "GET_STARTED") {
-                await sendText(senderId, "Sain&’ ", env.PAGE_ACCESS_TOKEN);
+                await sendText(
+                  senderId,
+                  "Сайн уу! 👋 Мэдээлэл авахын тулд доорх ≡ цэсийг дарна уу.",
+                  env.PAGE_ACCESS_TOKEN
+                );
               } else if (payload) {
                 console.log("ℹ️ Unknown payload:", payload);
               }
