@@ -20,9 +20,9 @@ const faqData = {
 export function faq(text) {
   const t = normalize(text);
 
-  // Клип асуултыг таньвал random хариулт буцаана
-  if (faqData[t]) {
-    const answers = faqData[t];
+  // Хэрэв өгүүлбэрт "клип" байгаа бол
+  if (t.includes("клип")) {
+    const answers = faqData["клип"];
     const randomIndex = Math.floor(Math.random() * answers.length);
     return answers[randomIndex];
   }
@@ -37,5 +37,6 @@ export function faq(text) {
   }
 
   // Default fallback
-  return "Нажментой: новоленнстаны выбой.";
+  return null;
 }
+
