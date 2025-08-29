@@ -55,15 +55,16 @@ export default {
               } else if (payload === "CONTACT_ADDRESS") {
                 await sendText(
                   senderId,
-                  "🏢 Манай хаяг:\n📍 Улаанбаатар, ...\n📞 Утас: +976 88302221\n✉️ Имэйл: info@studio.mn",
+                  "🏢 Манай хаяг:\n📍 Улаанбаатар, ...\n📞 Утас: +976 99112233\n✉️ Имэйл: info@studio.mn",
                   env.PAGE_ACCESS_TOKEN
                 );
               } else if (payload === "CONTACT_PROFILES") {
                 await sendText(senderId, "🌐 Манай профайлууд:", env.PAGE_ACCESS_TOKEN);
               } else if (payload === "GET_STARTED") {
+                const greeting = getGreeting();
                 await sendText(
                   senderId,
-                  "Сайн уу! 👋 Мэдээлэл авахын тулд доорх ☰ цэсийг дарна уу.",
+                  `${greeting}! 👋 Мэдээлэл авахын тулд доорх ☰ цэсийг дарна уу.`,
                   env.PAGE_ACCESS_TOKEN
                 );
               } else if (payload) {
@@ -83,6 +84,21 @@ export default {
     return new Response("Not found", { status: 404 });
   }
 };
+
+function getGreeting() {
+  const now = new Date();
+  const hour = (now.getUTCHours() + 8) % 24; // Улаанбаатарын цаг (UTC+8)
+
+  if (hour >= 5 && hour < 12) {
+    return "Өглөөний мэнд 🌅";
+  } else if (hour >= 12 && hour < 17) {
+    return "Өдрийн мэнд ☀️";
+  } else if (hour >= 17 && hour < 21) {
+    return "Оройн мэнд 🌆";
+  } else {
+    return "Үдшийн мэнд 🌙";
+  }
+}
 
 async function sendText(senderId, text, PAGE_ACCESS_TOKEN) {
   const url = `https://graph.facebook.com/v23.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`;
