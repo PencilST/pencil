@@ -30,7 +30,6 @@ export default {
         try {
           body = JSON.parse(raw);
         } catch {
-          console.error("❌ Invalid JSON:", raw);
           return new Response("Invalid JSON", { status: 400 });
         }
 
@@ -44,22 +43,22 @@ export default {
 
               if (!senderId) continue;
 
-              // 1. Үндсэн цэс
+              // --- Үндсэн цэс ---
               if (payload === "MENU_MAIN" || payload === "GET_STARTED") {
                 const greeting = getGreeting();
                 await sendTextWithQuickReplies(
                   senderId,
                   `${greeting}! 👋 Үндсэн цэсээс сонгоно уу 👇`,
                   [
-                    { content_type: "text", title: "🏢 Хаяг, дугаар", payload: "CONTACT_ADDRESS" },
-                    { content_type: "text", title: "🌐 Профайл", payload: "CONTACT_PROFILES" },
+                    { content_type: "text", title: "🏢 Ажил үйлчилгээ", payload: "MENU_SERVICE" },
+                    { content_type: "text", title: "💻 Мэдээлэл / Зөвлөгөө", payload: "MENU_INFO" },
                     { content_type: "text", title: "📞 Холбоо барих", payload: "MENU_CONTACT" }
                   ],
                   env.PAGE_ACCESS_TOKEN
                 );
               }
 
-              // 2. Холбоо барих цэс
+              // --- Холбоо барих ---
               else if (payload === "MENU_CONTACT") {
                 await sendTextWithQuickReplies(
                   senderId,
@@ -73,25 +72,51 @@ export default {
                 );
               }
 
-              // 3. Хаяг
+              // --- Хаяг ---
               else if (payload === "CONTACT_ADDRESS") {
                 await sendTextWithQuickReplies(
                   senderId,
                   "🏢 Манай хаяг:\n📍 Улаанбаатар, ...\n📞 Утас: +976 99112233\n✉️ Имэйл: info@studio.mn",
                   [
+                    { content_type: "text", title: "👩‍💼 Ажилчдын профайл", payload: "CONTACT_PROFILES" },
                     { content_type: "text", title: "⬅️ Буцах", payload: "MENU_CONTACT" }
                   ],
                   env.PAGE_ACCESS_TOKEN
                 );
               }
 
-              // 4. Профайл
+              // --- Профайл ---
               else if (payload === "CONTACT_PROFILES") {
                 await sendTextWithQuickReplies(
                   senderId,
                   "🌐 Манай профайлууд:\n- Facebook: fb.com/xxxx\n- Instagram: @xxxx",
                   [
+                    { content_type: "text", title: "🏢 Хаяг, дугаар", payload: "CONTACT_ADDRESS" },
                     { content_type: "text", title: "⬅️ Буцах", payload: "MENU_CONTACT" }
+                  ],
+                  env.PAGE_ACCESS_TOKEN
+                );
+              }
+
+              // --- Үйлчилгээ ---
+              else if (payload === "MENU_SERVICE") {
+                await sendTextWithQuickReplies(
+                  senderId,
+                  "🏢 Манай үйлчилгээний тухай мэдээлэл...",
+                  [
+                    { content_type: "text", title: "⬅️ Буцах", payload: "MENU_MAIN" }
+                  ],
+                  env.PAGE_ACCESS_TOKEN
+                );
+              }
+
+              // --- Мэдээлэл / Зөвлөгөө ---
+              else if (payload === "MENU_INFO") {
+                await sendTextWithQuickReplies(
+                  senderId,
+                  "💻 Мэдээлэл болон зөвлөгөө...",
+                  [
+                    { content_type: "text", title: "⬅️ Буцах", payload: "MENU_MAIN" }
                   ],
                   env.PAGE_ACCESS_TOKEN
                 );
@@ -102,7 +127,6 @@ export default {
 
         return new Response("EVENT_RECEIVED", { status: 200 });
       } catch (err) {
-        console.error("💥 Worker crashed:", err);
         return new Response("Error: " + err.message, { status: 500 });
       }
     }
