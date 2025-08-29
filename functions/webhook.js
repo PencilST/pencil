@@ -53,18 +53,37 @@ export default {
               if (payload === "CONTACT" || payload === "MENU_CONTACT") {
                 await sendContactMenu(senderId, env.PAGE_ACCESS_TOKEN);
               } else if (payload === "CONTACT_ADDRESS") {
-                await sendText(
+                await sendTextWithQuickReplies(
                   senderId,
                   "🏢 Манай хаяг:\n📍 Улаанбаатар, ...\n📞 Утас: +976 99112233\n✉️ Имэйл: info@studio.mn",
+                  [
+                    { content_type: "text", title: "🏢 Хаяг, дугаар", payload: "CONTACT_ADDRESS" },
+                    { content_type: "text", title: "🌐 Профайл", payload: "CONTACT_PROFILES" },
+                    { content_type: "text", title: "📞 Холбоо барих", payload: "MENU_CONTACT" }
+                  ],
                   env.PAGE_ACCESS_TOKEN
                 );
               } else if (payload === "CONTACT_PROFILES") {
-                await sendText(senderId, "🌐 Манай профайлууд:", env.PAGE_ACCESS_TOKEN);
+                await sendTextWithQuickReplies(
+                  senderId,
+                  "🌐 Манай профайлууд:",
+                  [
+                    { content_type: "text", title: "🏢 Хаяг, дугаар", payload: "CONTACT_ADDRESS" },
+                    { content_type: "text", title: "🌐 Профайл", payload: "CONTACT_PROFILES" },
+                    { content_type: "text", title: "📞 Холбоо барих", payload: "MENU_CONTACT" }
+                  ],
+                  env.PAGE_ACCESS_TOKEN
+                );
               } else if (payload === "GET_STARTED") {
                 const greeting = getGreeting();
-                await sendText(
+                await sendTextWithQuickReplies(
                   senderId,
                   `${greeting}! 👋 Мэдээлэл авахын тулд доорх ☰ цэсийг дарна уу.`,
+                  [
+                    { content_type: "text", title: "🏢 Хаяг, дугаар", payload: "CONTACT_ADDRESS" },
+                    { content_type: "text", title: "🌐 Профайл", payload: "CONTACT_PROFILES" },
+                    { content_type: "text", title: "📞 Холбоо барих", payload: "MENU_CONTACT" }
+                  ],
                   env.PAGE_ACCESS_TOKEN
                 );
               } else if (payload) {
@@ -87,7 +106,7 @@ export default {
 
 function getGreeting() {
   const now = new Date();
-  const hour = (now.getUTCHours() + 8) % 24; // Улаанбаатарын цаг (UTC+8)
+  const hour = (now.getUTCHours() + 8) % 24; // УБ цаг
 
   if (hour >= 5 && hour < 12) {
     return "Өглөөний мэнд 🌅";
@@ -100,11 +119,14 @@ function getGreeting() {
   }
 }
 
-async function sendText(senderId, text, PAGE_ACCESS_TOKEN) {
+async function sendTextWithQuickReplies(senderId, text, quickReplies, PAGE_ACCESS_TOKEN) {
   const url = `https://graph.facebook.com/v23.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`;
   const body = {
     recipient: { id: senderId },
-    message: { text },
+    message: {
+      text,
+      quick_replies: quickReplies,
+    },
   };
 
   await fetch(url, {
