@@ -23,11 +23,9 @@ export default {
             for (const event of entry.messaging) {
               if (event.message && event.sender) {
                 const senderId = event.sender.id;
-                // Шинэ хэрэглэгчид угталт мессеж илгээх
                 await sendWelcomeMessage(senderId, env.PAGE_ACCESS_TOKEN);
               }
 
-              // ✅ Handle payloads (menu & quick replies)
               if (event.postback || (event.message && event.message.quick_reply)) {
                 const payload =
                   event.postback?.payload || event.message.quick_reply.payload;
@@ -35,14 +33,15 @@ export default {
                 if (payload === "GET_STARTED") {
                   await sendText(
                     senderId,
-                    "👋 Сайн байна уу! Харандаа чатбот таныг угтаж байна.\n\n📌 Та эндээс дараах мэдээллийг авах боломжтой:\n🏢 Байгууллагын танилцуулга\n📚 Үйлчилгээний заавар\n📞 Холбоо барих"
+                    "👋 Сайн байна уу! Харандаа чатбот таныг угтаж байна.\n\n📌 Та эндээс дараах мэдээллийг авах боломжтой:\n🏢 Байгууллагын танилцуулга\n📚 Үйлчилгээний заавар\n📞 Холбоо барих",
+                    env.PAGE_ACCESS_TOKEN
                   );
                 } else if (payload === "MENU_OPERATIONS") {
-                  await sendText(senderId, "📌 Манай үйлчилгээний ажиллагааны талаар...");
+                  await sendText(senderId, "📌 Манай үйлчилгээний ажиллагааны талаар...", env.PAGE_ACCESS_TOKEN);
                 } else if (payload === "MENU_INFO") {
-                  await sendText(senderId, "ℹ️ Манай байгууллагын тухай дэлгэрэнгүй мэдээлэл...");
+                  await sendText(senderId, "ℹ️ Манай байгууллагын тухай дэлгэрэнгүй мэдээлэл...", env.PAGE_ACCESS_TOKEN);
                 } else if (payload === "MENU_CONTACT") {
-                  await sendText(senderId, "📞 Бидэнтэй холбогдох мэдээлэл...");
+                  await sendText(senderId, "📞 Бидэнтэй холбогдох мэдээлэл...", env.PAGE_ACCESS_TOKEN);
                 }
               }
             }
