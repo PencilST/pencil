@@ -87,6 +87,19 @@ export default {
 
               // --- Ажилчдын профайл ---
               else if (payload === "CONTACT_PROFILES") {
+                async function getProfilePic(username) {
+                  const res = await fetch(
+                    `https://graph.facebook.com/${username}/picture?width=400&height=400&redirect=0&access_token=${env.PAGE_ACCESS_TOKEN}`
+                  );
+                  const data = await res.json();
+                  return data.data.url;
+                }
+
+                // 3 хүний зураг URL-г татах
+                const sunbaatarPic = await getProfilePic("sunbaatar");
+                const gibsonPic = await getProfilePic("gibson.natsagdorj");
+                const yajPic = await getProfilePic("yajzaiavdagyum");
+
                 const urlFb = `https://graph.facebook.com/v23.0/me/messages?access_token=${env.PAGE_ACCESS_TOKEN}`;
                 const bodyProfiles = {
                   recipient: { id: senderId },
@@ -98,7 +111,7 @@ export default {
                         elements: [
                           {
                             title: "☀️ Сүнбаатар",
-                            image_url: "https://graph.facebook.com/sunbaatar/picture?width=400&height=400",
+                            image_url: sunbaatarPic,
                             subtitle: "Менежер — Бизнесийн удирдлага",
                             buttons: [
                               {
@@ -110,7 +123,7 @@ export default {
                           },
                           {
                             title: "🎸 Гибсон Нацагдорж",
-                            image_url: "https://graph.facebook.com/gibson.natsagdorj/picture?width=400&height=400",
+                            image_url: gibsonPic,
                             subtitle: "Хөгжимчин — Гитарист",
                             buttons: [
                               {
@@ -122,7 +135,7 @@ export default {
                           },
                           {
                             title: "🤔 Яаж Зайавдагюм",
-                            image_url: "https://graph.facebook.com/yajzaiavdagyum/picture?width=400&height=400",
+                            image_url: yajPic,
                             subtitle: "Инженер — Програм хангамж",
                             buttons: [
                               {
