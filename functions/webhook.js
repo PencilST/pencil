@@ -29,7 +29,8 @@ export default {
 
               // ✅ Handle payloads (menu & quick replies)
               if (event.postback || (event.message && event.message.quick_reply)) {
-                const payload = event.postback?.payload || event.message.quick_reply.payload;
+                const payload =
+                  event.postback?.payload || event.message.quick_reply.payload;
 
                 if (payload === "GET_STARTED") {
                   await sendText(
@@ -38,11 +39,23 @@ export default {
                     env.PAGE_ACCESS_TOKEN
                   );
                 } else if (payload === "MENU_OPERATIONS") {
-                  await sendText(senderId, "🏢 Манай үйлчилгээний дэлгэрэнгүй мэдээлэл...", env.PAGE_ACCESS_TOKEN);
+                  await sendText(
+                    senderId,
+                    "🏢 Манай үйлчилгээний дэлгэрэнгүй мэдээлэл...",
+                    env.PAGE_ACCESS_TOKEN
+                  );
                 } else if (payload === "MENU_INFO") {
-                  await sendText(senderId, "💻 Програм, техникийн зөвлөгөө...", env.PAGE_ACCESS_TOKEN);
+                  await sendText(
+                    senderId,
+                    "💻 Програм, техникийн зөвлөгөө...",
+                    env.PAGE_ACCESS_TOKEN
+                  );
                 } else if (payload === "MENU_CONTACT") {
-                  await sendText(senderId, "📞 Холбоо барих мэдээлэл...", env.PAGE_ACCESS_TOKEN);
+                  await sendText(
+                    senderId,
+                    "📞 Холбоо барих мэдээлэл...",
+                    env.PAGE_ACCESS_TOKEN
+                  );
                 }
               }
             }
@@ -56,7 +69,7 @@ export default {
     }
 
     return new Response("Not found", { status: 404 });
-  }
+  },
 };
 
 // 🟢 Welcome Message
@@ -69,14 +82,14 @@ async function sendWelcomeMessage(senderId, PAGE_ACCESS_TOKEN) {
       quick_replies: [
         { content_type: "text", title: "🏢 Үйлчилгээ", payload: "MENU_OPERATIONS" },
         { content_type: "text", title: "💻 Зөвлөгөө", payload: "MENU_INFO" },
-        { content_type: "text", title: "📞 Холбоо", payload: "MENU_CONTACT" }
-      ]
-    }
+        { content_type: "text", title: "📞 Холбоо", payload: "MENU_CONTACT" },
+      ],
+    },
   };
   await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
   });
 }
 
@@ -85,11 +98,11 @@ async function sendText(senderId, text, PAGE_ACCESS_TOKEN) {
   const url = `https://graph.facebook.com/v16.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`;
   const body = {
     recipient: { id: senderId },
-    message: { text }
+    message: { text },
   };
   await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
   });
 }
