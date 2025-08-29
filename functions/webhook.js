@@ -90,25 +90,29 @@ export default {
                 console.log("👉 CONTACT_PROFILES цэс сонгогдлоо");
 
                 async function getProfilePic(id) {
-                  const apiUrl = `https://graph.facebook.com/${id}/picture?width=400&height=400&redirect=0&access_token=${env.PAGE_ACCESS_TOKEN}`;
-                  console.log("📡 Fetch profile pic API:", apiUrl);
+  const apiUrl = `https://graph.facebook.com/${id}/picture?width=400&height=400&redirect=0&access_token=${env.PAGE_ACCESS_TOKEN}`;
+  console.log("📸 Fetch profile pic API:", apiUrl);
 
-                  try {
-                    const res = await fetch(apiUrl);
-                    const data = await res.json();
+  try {
+    const res = await fetch(apiUrl);
+    const data = await res.json();
 
-                    if (!data || !data.data || !data.data.url) {
-                      console.error("⚠️ Profile API response буруу байна:", JSON.stringify(data));
-                      return "";
-                    }
+    if (!data || !data.data || !data.data.url) {
+      console.error("⚠️ Profile API зураг буцаасангүй:", JSON.stringify(data));
+      // Default зураг зааж өгнө
+      return "https://i.imgur.com/8Km9tLL.jpg"; 
+    }
 
-                    console.log("✅ Profile API response for", id, ":", data.data.url);
-                    return data.data.url;
-                  } catch (err) {
-                    console.error("❌ Profile API алдаа:", id, err.message);
-                    return "";
-                  }
-                }
+    console.log("✅ Profile pic URL for", id, ":", data.data.url);
+    return data.data.url;
+
+  } catch (err) {
+    console.error("❌ Profile API алдаа:", id, err.message);
+    // Default зураг зааж өгнө
+    return "https://i.imgur.com/8Km9tLL.jpg"; 
+  }
+}
+
 
                 try {
                   const sunbaatarPic = await getProfilePic("100003275328756"); // Наранбаатар
