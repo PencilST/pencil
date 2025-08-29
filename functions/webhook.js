@@ -85,17 +85,64 @@ export default {
                 );
               }
 
-              // --- Профайл ---
+              // --- Ажилчдын профайл ---
               else if (payload === "CONTACT_PROFILES") {
-                await sendTextWithQuickReplies(
-                  senderId,
-                  "🌐 Манай профайлууд:\n- Facebook: fb.com/xxxx\n- Instagram: @xxxx",
-                  [
-                    { content_type: "text", title: "🏢 Хаяг, дугаар", payload: "CONTACT_ADDRESS" },
-                    { content_type: "text", title: "⬅️ Буцах", payload: "MENU_CONTACT" }
-                  ],
-                  env.PAGE_ACCESS_TOKEN
-                );
+                const urlFb = `https://graph.facebook.com/v23.0/me/messages?access_token=${env.PAGE_ACCESS_TOKEN}`;
+                const bodyProfiles = {
+                  recipient: { id: senderId },
+                  message: {
+                    attachment: {
+                      type: "template",
+                      payload: {
+                        template_type: "generic",
+                        elements: [
+                          {
+                            title: "☀️ Сүнбаатар",
+                            image_url: "https://graph.facebook.com/sunbaatar/picture?type=large",
+                            subtitle: "Менежер — Бизнесийн удирдлага",
+                            buttons: [
+                              {
+                                type: "web_url",
+                                url: "https://www.facebook.com/sunbaatar",
+                                title: "Facebook харах"
+                              }
+                            ]
+                          },
+                          {
+                            title: "🎸 Гибсон Нацагдорж",
+                            image_url: "https://graph.facebook.com/gibson.natsagdorj/picture?type=large",
+                            subtitle: "Хөгжимчин — Гитарист",
+                            buttons: [
+                              {
+                                type: "web_url",
+                                url: "https://www.facebook.com/gibson.natsagdorj",
+                                title: "Facebook харах"
+                              }
+                            ]
+                          },
+                          {
+                            title: "🤔 Яаж Зайавдагюм",
+                            image_url: "https://graph.facebook.com/yajzaiavdagyum/picture?type=large",
+                            subtitle: "Инженер — Програм хангамж",
+                            buttons: [
+                              {
+                                type: "web_url",
+                                url: "https://www.facebook.com/yajzaiavdagyum",
+                                title: "Facebook харах"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  }
+                };
+
+                await fetch(urlFb, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(bodyProfiles),
+                });
               }
 
               // --- Үйлчилгээ ---
