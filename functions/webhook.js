@@ -50,34 +50,8 @@ export default {
                 continue;
               }
 
-              if (payload === "CONTACT_ADDRESS") {
-                await sendTextWithQuickReplies(
-                  senderId,
-                  "🏢 Манай хаяг:\n📍 Улаанбаатар, ...\n📞 Утас: +976 99112233\n✉️ Имэйл: info@studio.mn",
-                  [
-                    { content_type: "text", title: "⬅️ Буцах", payload: "MENU_MAIN" }
-                  ],
-                  env.PAGE_ACCESS_TOKEN
-                );
-              } else if (payload === "CONTACT_PROFILES") {
-                await sendTextWithQuickReplies(
-                  senderId,
-                  "🌐 Манай профайлууд:",
-                  [
-                    { content_type: "text", title: "⬅️ Буцах", payload: "MENU_MAIN" }
-                  ],
-                  env.PAGE_ACCESS_TOKEN
-                );
-              } else if (payload === "MENU_CONTACT") {
-                await sendTextWithQuickReplies(
-                  senderId,
-                  "📞 Холбоо барих цэс",
-                  [
-                    { content_type: "text", title: "⬅️ Буцах", payload: "MENU_MAIN" }
-                  ],
-                  env.PAGE_ACCESS_TOKEN
-                );
-              } else if (payload === "MENU_MAIN" || payload === "GET_STARTED") {
+              // 📌 Үндсэн 3 цэс
+              if (payload === "MENU_MAIN" || payload === "GET_STARTED") {
                 const greeting = getGreeting();
                 await sendTextWithQuickReplies(
                   senderId,
@@ -89,7 +63,43 @@ export default {
                   ],
                   env.PAGE_ACCESS_TOKEN
                 );
-              } else if (payload) {
+              }
+              // 📌 Холбоо барих цэс
+              else if (payload === "MENU_CONTACT") {
+                await sendTextWithQuickReplies(
+                  senderId,
+                  "📞 Холбоо барих цэс:",
+                  [
+                    { content_type: "text", title: "🏢 Хаяг, дугаар", payload: "CONTACT_ADDRESS" },
+                    { content_type: "text", title: "👩‍💼 Ажилчдын профайл", payload: "CONTACT_PROFILES" },
+                    { content_type: "text", title: "⬅️ Буцах", payload: "MENU_MAIN" }
+                  ],
+                  env.PAGE_ACCESS_TOKEN
+                );
+              }
+              // 📌 Хаяг, дугаар
+              else if (payload === "CONTACT_ADDRESS") {
+                await sendTextWithQuickReplies(
+                  senderId,
+                  "🏢 Манай хаяг:\n📍 Улаанбаатар, ...\n📞 Утас: +976 99112233\n✉️ Имэйл: info@studio.mn",
+                  [
+                    { content_type: "text", title: "⬅️ Буцах", payload: "MENU_CONTACT" }
+                  ],
+                  env.PAGE_ACCESS_TOKEN
+                );
+              }
+              // 📌 Профайл
+              else if (payload === "CONTACT_PROFILES") {
+                await sendTextWithQuickReplies(
+                  senderId,
+                  "🌐 Манай профайлууд:",
+                  [
+                    { content_type: "text", title: "⬅️ Буцах", payload: "MENU_CONTACT" }
+                  ],
+                  env.PAGE_ACCESS_TOKEN
+                );
+              }
+              else if (payload) {
                 console.log("ℹ️ Unknown payload:", payload);
               }
             }
