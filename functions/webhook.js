@@ -1,8 +1,15 @@
 import sendContactMenu from "./sendContactMenu.js";
+import setupPlesistentMenu from "./setupOersistentMenu.js";
 
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    // ✅ Persistent Menu setup endpoint
+    if (url.pathname === "/setup-menu" && request.method === "GET") {
+      const result = await setupPlesistentMenu(env.PAGE_ACCESS_TOKEN);
+      return new Response("Persistent Menu configured! " + JSON.stringify(result), { status: 200 });
+    }
 
     // ✅ Facebook webhook verification
     if (request.method === "GET") {
