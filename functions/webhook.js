@@ -97,12 +97,19 @@ export default {
     const res = await fetch(apiUrl);
     const data = await res.json();
 
-    // 🔍 API-гаас яг юу ирж байгааг шалгах
+    // Debug log
     console.log("📥 Profile API response:", JSON.stringify(data, null, 2));
 
+    // Хэрэв алдаа эсвэл хоосон бол default зураг буцаа
     if (!data || !data.data || !data.data.url) {
-      console.error("⚠️ Profile API зураг буцаасангүй:", JSON.stringify(data));
-      return "https://i.imgur.com/8Km9tLL.jpg"; // Default зураг
+      console.warn("⚠️ Profile API зураг буцаасангүй:", JSON.stringify(data));
+      return "https://i.imgur.com/8Km9tLL.jpg"; // Default
+    }
+
+    // Хэрэв Facebook "is_silhouette": true гэж буцаавал бас default ашигла
+    if (data.data.is_silhouette === true) {
+      console.warn("⚠️ Profile private тул default зураг хэрэглэж байна:", id);
+      return "https://i.imgur.com/8Km9tLL.jpg";
     }
 
     console.log("✅ Profile pic URL for", id, ":", data.data.url);
@@ -110,7 +117,7 @@ export default {
 
   } catch (err) {
     console.error("❌ Profile API алдаа:", id, err.message);
-    return "https://i.imgur.com/8Km9tLL.jpg"; // Default зураг
+    return "https://i.imgur.com/8Km9tLL.jpg"; // Default
   }
 }
 
