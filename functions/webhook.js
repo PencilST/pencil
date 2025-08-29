@@ -98,7 +98,7 @@ export default {
                         elements: [
                           {
                             title: "☀️ Сүнбаатар",
-                            image_url: "https://graph.facebook.com/sunbaatar/picture?type=large",
+                            image_url: "https://graph.facebook.com/sunbaatar/picture?width=400&height=400",
                             subtitle: "Менежер — Бизнесийн удирдлага",
                             buttons: [
                               {
@@ -110,7 +110,7 @@ export default {
                           },
                           {
                             title: "🎸 Гибсон Нацагдорж",
-                            image_url: "https://graph.facebook.com/gibson.natsagdorj/picture?type=large",
+                            image_url: "https://graph.facebook.com/gibson.natsagdorj/picture?width=400&height=400",
                             subtitle: "Хөгжимчин — Гитарист",
                             buttons: [
                               {
@@ -122,7 +122,7 @@ export default {
                           },
                           {
                             title: "🤔 Яаж Зайавдагюм",
-                            image_url: "https://graph.facebook.com/yajzaiavdagyum/picture?type=large",
+                            image_url: "https://graph.facebook.com/yajzaiavdagyum/picture?width=400&height=400",
                             subtitle: "Инженер — Програм хангамж",
                             buttons: [
                               {
