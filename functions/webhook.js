@@ -31,11 +31,7 @@ export default {
                   event.postback?.payload || event.message.quick_reply.payload;
 
                 if (payload === "GET_STARTED") {
-                  await sendText(
-                    senderId,
-                    "👋 Сайн байна уу! Харандаа чатбот таныг угтаж байна.\n\n📌 Та эндээс дараах мэдээллийг авах боломжтой:\n🏢 Байгууллагын танилцуулга\n📚 Үйлчилгээний заавар\n📞 Холбоо барих",
-                    env.PAGE_ACCESS_TOKEN
-                  );
+                  await sendWelcomeMessage(senderId, env.PAGE_ACCESS_TOKEN);
                 } else if (payload === "MENU_OPERATIONS") {
                   await sendText(senderId, "📌 Манай үйлчилгээний ажиллагааны талаар...", env.PAGE_ACCESS_TOKEN);
                 } else if (payload === "MENU_INFO") {
@@ -65,7 +61,7 @@ async function sendWelcomeMessage(senderId, PAGE_ACCESS_TOKEN) {
   const body = {
     recipient: { id: senderId },
     message: {
-      text: "👋 Сайн байна уу? Харандаа чатбот танд дараах цэсийг санал болгож байна:",
+      text: "👋 Тавтай морил! Доорх сонголтоос сонгоно уу:",
       quick_replies: [
         { content_type: "text", title: "📌 Үйлчилгээ", payload: "MENU_OPERATIONS" },
         { content_type: "text", title: "ℹ️ Мэдээлэл", payload: "MENU_INFO" },
