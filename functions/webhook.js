@@ -67,7 +67,7 @@ export default {
         }
 
         return new Response("EVENT_RECEIVED", { status: 200 });
-      } catch (err) {
+        catch (err) {
         return new Response("Error", { status: 500 });
       }
     }
