@@ -1,5 +1,8 @@
 name = "pencil-bot"
-main = "worker.js"
+main = "functions/webhook.js"
 account_id = "2753dad2f17d6d3875b7fc442a1fe984"
 compatibility_date = "2025-08-27"
 workers_dev = true
+
+[observability.logs]
+enabled = true
