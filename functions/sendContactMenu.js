@@ -5,16 +5,16 @@ export default async function sendContactMenu(senderId, PAGE_ACCESS_TOKEN) {
     recipient: { id: senderId },
     messaging_type: "RESPONSE",
     message: {
-      text: "📑 ❤❤❤ ️‟",
+      text: "📞 Холбоо барих",
       quick_replies: [
         {
           content_type: "text",
-          title: "���� буления, нервол",
+          title: "🏢 Хаяг, дугаар",
           payload: "CONTACT_ADDRESS"
         },
         {
           content_type: "text",
-          title: "👩‍🎨 Ажилчдын",
+          title: "👩‍🎨 Ажилчдын профайл",
           payload: "CONTACT_PROFILES"
         }
       ]
@@ -34,6 +34,6 @@ export default async function sendContactMenu(senderId, PAGE_ACCESS_TOKEN) {
     }
     return data;
   } catch (err) {
-    console.error("Network error", err){
+    console.error("Network error", err);
   }
 }
