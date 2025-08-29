@@ -89,8 +89,8 @@ export default {
               else if (payload === "CONTACT_PROFILES") {
                 console.log("👉 CONTACT_PROFILES цэс сонгогдлоо");
 
-                async function getProfilePic(username) {
-                  const apiUrl = `https://graph.facebook.com/${username}/picture?width=400&height=400&redirect=0&access_token=${env.PAGE_ACCESS_TOKEN}`;
+                async function getProfilePic(id) {
+                  const apiUrl = `https://graph.facebook.com/${id}/picture?width=400&height=400&redirect=0&access_token=${env.PAGE_ACCESS_TOKEN}`;
                   console.log("📡 Fetch profile pic API:", apiUrl);
 
                   try {
@@ -102,20 +102,20 @@ export default {
                       return "";
                     }
 
-                    console.log("✅ Profile API response for", username, ":", data.data.url);
+                    console.log("✅ Profile API response for", id, ":", data.data.url);
                     return data.data.url;
                   } catch (err) {
-                    console.error("❌ Profile API алдаа:", username, err.message);
+                    console.error("❌ Profile API алдаа:", id, err.message);
                     return "";
                   }
                 }
 
                 try {
-                  const sunbaatarPic = await getProfilePic("sunbaatar");
-                  const gibsonPic = await getProfilePic("gibson.natsagdorj");
-                  const yajPic = await getProfilePic("yajzaiavdagyum");
+                  const sunbaatarPic = await getProfilePic("100003275328756"); // Наранбаатар
+                  const gibsonPic = await getProfilePic("100003636016682");    // Нацагдорж
+                  const ganbatPic = await getProfilePic("100080558270234");    // Ганбат
 
-                  console.log("🖼️ Final picture URLs:", { sunbaatarPic, gibsonPic, yajPic });
+                  console.log("🖼️ Final picture URLs:", { sunbaatarPic, gibsonPic, ganbatPic });
 
                   const urlFb = `https://graph.facebook.com/v23.0/me/messages?access_token=${env.PAGE_ACCESS_TOKEN}`;
                   const bodyProfiles = {
@@ -127,27 +127,27 @@ export default {
                           template_type: "generic",
                           elements: [
                             {
-                              title: "☀️ Сүнбаатар",
+                              title: "☀️ Наранбаатар",
                               image_url: sunbaatarPic,
                               subtitle: "Менежер — Бизнесийн удирдлага",
                               buttons: [
-                                { type: "web_url", url: "https://www.facebook.com/sunbaatar", title: "Facebook харах" }
+                                { type: "web_url", url: "https://www.facebook.com/100003275328756", title: "Facebook харах" }
                               ]
                             },
                             {
-                              title: "🎸 Гибсон Нацагдорж",
+                              title: "🎸 Нацагдорж",
                               image_url: gibsonPic,
                               subtitle: "Хөгжимчин — Гитарист",
                               buttons: [
-                                { type: "web_url", url: "https://www.facebook.com/gibson.natsagdorj", title: "Facebook харах" }
+                                { type: "web_url", url: "https://www.facebook.com/100003636016682", title: "Facebook харах" }
                               ]
                             },
                             {
-                              title: "🤔 Яаж Зайавдагюм",
-                              image_url: yajPic,
+                              title: "🤔 Ганбат",
+                              image_url: ganbatPic,
                               subtitle: "Инженер — Програм хангамж",
                               buttons: [
-                                { type: "web_url", url: "https://www.facebook.com/yajzaiavdagyum", title: "Facebook харах" }
+                                { type: "web_url", url: "https://www.facebook.com/100080558270234", title: "Facebook харах" }
                               ]
                             }
                           ]
