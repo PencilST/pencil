@@ -37,11 +37,33 @@ export default {
                 } else if (payload === "MENU_INFO") {
                   await sendText(senderId, "ℹ️ Манай байгууллагын тухай дэлгэрэнгүй мэдээлэл...", env.PAGE_ACCESS_TOKEN);
                 } else if (payload === "MENU_CONTACT") {
-                  await sendText(senderId, "📞 Бидэнтэй холбогдох мэдээлэл...", env.PAGE_ACCESS_TOKEN);
+                  const url = `https://graph.facebook.com/v16.0/me/messages?access_token=${env.PAGE_ACCESS_TOKEN}`
+                  const body = {
+                    recipient: {id: senderId},
+                    message: {attachment: {
+                      type: "template",
+                      payload: {
+                        template_type: "button",
+                        text: "🔟 мункашия послен заработрания",
+                        buttons: [
+                          { type: "postback", title: "👵 Картерго", payload: "CONTACT_ADDRESS"},
+                          { type: "postback", title: "🐟 Аворай Пробавиного", payload: "CONTACT_PROFILES"}
+                        ]
+                      }
+                    }}
+                  };
+                  await fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(body),
+                });
+                } else if (payload === "CONTACT_ADDRESS") {
+                  await sendText(senderId, "👥 Manai studi: UB 条, тобрасанный...\n🐥 Utas helber: +976 99112233\n🐙 Imeil: info@studio.mn", env.PAGE_ACCESS_TOKEN);
+                } else if (payload === "CONTACT_PROFILES") {
+                  await sendText(senderId, "🌤 Ajilchd/Uran buteelchdiin profail: tun udahgi…", env.PAGE_ACCESS_TOKEN);
                 }
               }
             }
-          }
         }
 
         return new Response("EVENT_RECEIVED", { status: 200 });
@@ -54,8 +76,7 @@ export default {
   },
 };
 
-// ========================
-// ✅ Welcome Message (Button Template)
+// Welcome Message (Button Template)
 async function sendWelcomeMessage(senderId, PAGE_ACCESS_TOKEN) {
   const url = `https://graph.facebook.com/v16.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`;
   const body = {
@@ -67,7 +88,7 @@ async function sendWelcomeMessage(senderId, PAGE_ACCESS_TOKEN) {
           template_type: "button",
           text: "👋 Тавтай морил! Доорх сонголтоос сонгоно уу:",
           buttons: [
-            { type: "postback", title: "📌 Үйлчилгээ", payload: "MENU_OPERATIONS" },
+            { type: "postback", title: "📌 Үйлчилгээ"x
             { type: "postback", title: "ℹ️ Мэдээлэл", payload: "MENU_INFO" },
             { type: "postback", title: "📞 Холбоо барих", payload: "MENU_CONTACT" }
           ]
@@ -82,7 +103,7 @@ async function sendWelcomeMessage(senderId, PAGE_ACCESS_TOKEN) {
   });
 }
 
-// ✅ Simple Text Message
+// Simple Text Message
 async function sendText(senderId, text, PAGE_ACCESS_TOKEN) {
   const url = `https://graph.facebook.com/v16.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`;
   const body = {
