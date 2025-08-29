@@ -1,17 +1,16 @@
-import sendContactMenu from "./sendContactMenu.js";
 import setupPersistentMenu from "./setupPersistentMenu.js";
 
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // 🟢 Persistent Menu setup endpoint
+    // Persistent menu setup
     if (url.pathname === "/setup-menu" && request.method === "GET") {
       const result = await setupPersistentMenu(env.PAGE_ACCESS_TOKEN);
       return new Response("Persistent Menu configured! " + JSON.stringify(result), { status: 200 });
     }
 
-    // 🟢 Facebook webhook verification
+    // Facebook webhook verification
     if (request.method === "GET") {
       const token = url.searchParams.get("hub.verify_token");
       const challenge = url.searchParams.get("hub.challenge");
@@ -22,20 +21,18 @@ export default {
       }
     }
 
-    // 🟢 Handle incoming messages
+    // Handle incoming messages
     if (request.method === "POST") {
       try {
         const raw = await request.text();
-
         let body;
+
         try {
           body = JSON.parse(raw);
         } catch {
           console.error("❌ Invalid JSON:", raw);
           return new Response("Invalid JSON", { status: 400 });
         }
-
-        console.log("📩 Incoming webhook body:", JSON.stringify(body, null, 2));
 
         if (body?.entry) {
           for (const entry of body.entry) {
@@ -45,12 +42,9 @@ export default {
                 event.message?.quick_reply?.payload ||
                 event.postback?.payload;
 
-              if (!senderId) {
-                console.error("⚠️ Missing senderId:", event);
-                continue;
-              }
+              if (!senderId) continue;
 
-              // 📌 Үндсэн 3 цэс
+              // 1. Үндсэн цэс
               if (payload === "MENU_MAIN" || payload === "GET_STARTED") {
                 const greeting = getGreeting();
                 await sendTextWithQuickReplies(
@@ -64,7 +58,8 @@ export default {
                   env.PAGE_ACCESS_TOKEN
                 );
               }
-              // 📌 Холбоо барих цэс
+
+              // 2. Холбоо барих цэс
               else if (payload === "MENU_CONTACT") {
                 await sendTextWithQuickReplies(
                   senderId,
@@ -77,7 +72,8 @@ export default {
                   env.PAGE_ACCESS_TOKEN
                 );
               }
-              // 📌 Хаяг, дугаар
+
+              // 3. Хаяг
               else if (payload === "CONTACT_ADDRESS") {
                 await sendTextWithQuickReplies(
                   senderId,
@@ -88,19 +84,17 @@ export default {
                   env.PAGE_ACCESS_TOKEN
                 );
               }
-              // 📌 Профайл
+
+              // 4. Профайл
               else if (payload === "CONTACT_PROFILES") {
                 await sendTextWithQuickReplies(
                   senderId,
-                  "🌐 Манай профайлууд:",
+                  "🌐 Манай профайлууд:\n- Facebook: fb.com/xxxx\n- Instagram: @xxxx",
                   [
                     { content_type: "text", title: "⬅️ Буцах", payload: "MENU_CONTACT" }
                   ],
                   env.PAGE_ACCESS_TOKEN
                 );
-              }
-              else if (payload) {
-                console.log("ℹ️ Unknown payload:", payload);
               }
             }
           }
@@ -121,25 +115,17 @@ function getGreeting() {
   const now = new Date();
   const hour = (now.getUTCHours() + 8) % 24; // УБ цаг
 
-  if (hour >= 5 && hour < 12) {
-    return "Өглөөний мэнд 🌅";
-  } else if (hour >= 12 && hour < 17) {
-    return "Өдрийн мэнд ☀️";
-  } else if (hour >= 17 && hour < 21) {
-    return "Оройн мэнд 🌆";
-  } else {
-    return "Үдшийн мэнд 🌙";
-  }
+  if (hour >= 5 && hour < 12) return "Өглөөний мэнд 🌅";
+  if (hour >= 12 && hour < 17) return "Өдрийн мэнд ☀️";
+  if (hour >= 17 && hour < 21) return "Оройн мэнд 🌆";
+  return "Үдшийн мэнд 🌙";
 }
 
 async function sendTextWithQuickReplies(senderId, text, quickReplies, PAGE_ACCESS_TOKEN) {
   const url = `https://graph.facebook.com/v23.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`;
   const body = {
     recipient: { id: senderId },
-    message: {
-      text,
-      quick_replies: quickReplies,
-    },
+    message: { text, quick_replies: quickReplies },
   };
 
   await fetch(url, {
