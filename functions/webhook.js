@@ -60,6 +60,8 @@ export default {
                 );
               } else if (payload === "CONTACT_PROFILES") {
                 await sendText(senderId, "👩‍🎨 Ажилчдын профайл", env.PAGE_ACCESS_TOKEN);
+              } else if (payload === "GET_STARTED") {
+                await sendText(senderId, "Sain&’ ", env.PAGE_ACCESS_TOKEN);
               } else if (payload) {
                 console.log("ℹ️ Unknown payload:", payload);
               }
