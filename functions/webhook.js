@@ -55,7 +55,7 @@ export default {
               } else if (payload === "CONTACT_ADDRESS") {
                 await sendText(
                   senderId,
-                  "🏢 Манай хаяг:\n📍 Улаанбаатар, ...\n📞 Утас: +976 99112233\n✉️ Имэйл: info@studio.mn",
+                  "🏢 Манай хаяг:\n📍 Улаанбаатар, ...\n📞 Утас: +976 88302221\n✉️ Имэйл: info@studio.mn",
                   env.PAGE_ACCESS_TOKEN
                 );
               } else if (payload === "CONTACT_PROFILES") {
@@ -63,7 +63,7 @@ export default {
               } else if (payload === "GET_STARTED") {
                 await sendText(
                   senderId,
-                  "Сайн уу! 👋 Мэдээлэл авахын тулд доорх ≡ цэсийг дарна уу.",
+                  "Сайн уу! 👋 Мэдээлэл авахын тулд доорх ☰ цэсийг дарна уу.",
                   env.PAGE_ACCESS_TOKEN
                 );
               } else if (payload) {
