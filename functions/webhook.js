@@ -15,13 +15,11 @@ export default {
       }
     }
 
-    // ✅ Handle incoming messages
+    // ✅ Handle incoming messages (no signature verify)
     if (request.method === "POST") {
       try {
-        const signature256 = request.headers.get("x-hub-signature-256");
         const raw = await request.text();
 
-        // Parse JSON body safely
         let body;
         try {
           body = JSON.parse(raw);
@@ -30,32 +28,8 @@ export default {
           return new Response("Invalid JSON", { status: 400 });
         }
 
-        // ✅ Signature verification
-        if (signature256) {
-          const encoder = new TextEncoder();
-          const key = await crypto.subtle.importKey(
-            "raw",
-            encoder.encode(env.APP_SECRET),
-            { name: "HMAC", hash: "SHA-256" },
-            false,
-            ["verify"]
-          );
+        console.log("📥 Incoming webhook body:", JSON.stringify(body, null, 2));
 
-          const expected = hexToBytes(signature256.replace("sha256=", ""));
-          const ok = await crypto.subtle.verify(
-            "HMAC",
-            key,
-            expected,
-            encoder.encode(raw)
-          );
-
-          if (!ok) {
-            console.error("❌ Invalid signature");
-            return new Response("Invalid signature", { status: 403 });
-          }
-        }
-
-        // 👉 Handle payloads safely
         if (body?.entry) {
           for (const entry of body.entry) {
             for (const event of entry.messaging ?? []) {
@@ -63,7 +37,7 @@ export default {
               const payload = event.message?.quick_reply?.payload;
 
               if (!senderId) {
-                console.error("⚠️ Missing senderId in event:", event);
+                console.error("⚠️ Missing senderId:", event);
                 continue;
               }
 
@@ -77,13 +51,9 @@ export default {
                 );
               } else if (payload === "CONTACT_PROFILES") {
                 await sendText(senderId, "👩‍🎨 Ажилчдын профайл", env.PAGE_ACCESS_TOKEN);
-              } else {
-                console.log("ℹ️ Unknown payload:", payload);
               }
             }
           }
-        } else {
-          console.error("⚠️ No entry in body:", body);
         }
 
         return new Response("EVENT_RECEIVED", { status: 200 });
@@ -97,7 +67,6 @@ export default {
   }
 };
 
-// Simple text reply
 async function sendText(senderId, text, PAGE_ACCESS_TOKEN) {
   const url = `https://graph.facebook.com/v23.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`;
   const body = {
@@ -110,13 +79,4 @@ async function sendText(senderId, text, PAGE_ACCESS_TOKEN) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
-}
-
-// Helper to convert hex signature → Uint8Array
-function hexToBytes(hex) {
-  const bytes = new Uint8Array(Math.ceil(hex.length / 2));
-  for (let i = 0; i < bytes.length; i++) {
-    bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
-  }
-  return bytes;
 }
