@@ -1,5 +1,5 @@
 import sendContactMenu from "./sendContactMenu.js";
-import setupPlesistentMenu from "./setupOersistentMenu.js";
+import setupPersistentMenu from "./setupPersistentMenu.js";
 
 export default {
   async fetch(request, env) {
@@ -7,7 +7,7 @@ export default {
 
     // ✅ Persistent Menu setup endpoint
     if (url.pathname === "/setup-menu" && request.method === "GET") {
-      const result = await setupPlesistentMenu(env.PAGE_ACCESS_TOKEN);
+      const result = await setupPersistentMenu(env.PAGE_ACCESS_TOKEN);
       return new Response("Persistent Menu configured! " + JSON.stringify(result), { status: 200 });
     }
 
