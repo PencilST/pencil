@@ -29,7 +29,7 @@ export function normalize(text) {
     "хоёёё": "хөөе",
     "хүё": "хөөе",
 
-    // --- Клип / Clip variations ---
+    // --- Клип variations ---
     "clip": "клип",
     "klip": "клип",
     "clib": "клип",
