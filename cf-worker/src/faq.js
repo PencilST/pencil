@@ -20,14 +20,14 @@ const faqData = {
 export function faq(text) {
   const t = normalize(text);
 
-  // Хэрэв өгүүлбэрт "клип" байгаа бол
+  // --- Клип keyword багтсан эсэхийг шалгах ---
   if (t.includes("клип")) {
     const answers = faqData["клип"];
     const randomIndex = Math.floor(Math.random() * answers.length);
     return answers[randomIndex];
   }
 
-  // Чиний одоо байгаа тусгай нөхцөлүүд
+  // Чиний тусгай нөхцөлүүд
   if (t.includes("ореден")) {
     return "Миних буреции следж дараборми";
   }
@@ -36,7 +36,6 @@ export function faq(text) {
     return "Pencil project и таны конт болоч китерилительного уже.";
   }
 
-  // Default fallback
+  // Танигдаагүй бол
   return null;
 }
-
