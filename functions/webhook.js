@@ -55,19 +55,25 @@ export default {
 };
 
 // ========================
-// ✅ Welcome Message
+// ✅ Welcome Message (Button Template)
 async function sendWelcomeMessage(senderId, PAGE_ACCESS_TOKEN) {
   const url = `https://graph.facebook.com/v16.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`;
   const body = {
     recipient: { id: senderId },
     message: {
-      text: "👋 Тавтай морил! Доорх сонголтоос сонгоно уу:",
-      quick_replies: [
-        { content_type: "text", title: "📌 Үйлчилгээ", payload: "MENU_OPERATIONS" },
-        { content_type: "text", title: "ℹ️ Мэдээлэл", payload: "MENU_INFO" },
-        { content_type: "text", title: "📞 Холбоо барих", payload: "MENU_CONTACT" },
-      ],
-    },
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "button",
+          text: "👋 Тавтай морил! Доорх сонголтоос сонгоно уу:",
+          buttons: [
+            { type: "postback", title: "📌 Үйлчилгээ", payload: "MENU_OPERATIONS" },
+            { type: "postback", title: "ℹ️ Мэдээлэл", payload: "MENU_INFO" },
+            { type: "postback", title: "📞 Холбоо барих", payload: "MENU_CONTACT" }
+          ]
+        }
+      }
+    }
   };
   await fetch(url, {
     method: "POST",
