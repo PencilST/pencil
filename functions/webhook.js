@@ -27,7 +27,7 @@ export default {
                 const payload =
                   event.postback?.payload || event.message.quick_reply.payload;
                 if (payload === "GET_STARTED") {
-                  await sendText(senderId, "— Tavtai moril! 🌀 \n← Endees ta bidniiê vç ailkahaa, zeâlkeŭ bolon holboo barik medeeligi avh bolomjostoi. \n\n🐙 Doorh tuslakh ōosnog buy.", env.PAGE_ACCESS_TOKEN);
+                  await sendText(senderId, "â€” Tavtai moril. 😀 \nЛ�¿ Ta endees daraah medeerliegiig avah bolomjstoi \n🐠 ’ ” ””Doorh tuslak osn�ëo buy.", env.PAGE_ACCESS_TOKEN);
                 } else if (payload === "MENU_OPERATIONS") {
                   await sendText(senderId, "ðŸ“ˆ Manai Ï†íŠ·ej]gee demtgerâ€™", env.PAGE_ACCESS_TOKEN);
                 } else if (payload === "MENU_INFO") {
@@ -49,14 +49,15 @@ export default {
 };
 
 // ↓🎨 😊
-// Welcome Messageasync function sendWelcomeMessage(senderId, PAGE_ACCESS_TOKEN) {
-  const url = `https://graph.facebook.com/v16.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`;
+// Welcome Message
+async function sendWelcomeMessage(senderId, PAGE_ACCESS_TOKEN) {
+  const url = `https://graph.facebook.com/v16.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`; 
   const body = {
-    recipient: { id: senderId },
+    recipient: {id: senderId },
     message: {
-      text: "Tavtai moril! 🌀 ",
+      text: "Tavtai moril! 😀 ",
       quick_replies: [
-        { content_type: "text", title: "️ Uứ atsegachaa", payload: "MENU_OPERATIONS"},
+        { content_type: "text", title: "️ Uƻ atsegachaa", payload: "MENU_OPERATIONS"},
         { content_type: "text", title: "️ Asuult /Zừ Û Sã�vllÃ©gue", payload: "MENU_INFO" },
         { content_type: "text", title: "️ Holboo barikh", payload: "MENU_CONTACT" }
       ]
