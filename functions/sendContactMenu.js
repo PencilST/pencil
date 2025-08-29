@@ -1,20 +1,20 @@
-async function sendContactMenu(senderId, PAGE_ACCESS_TOKEN) {
+export default async function sendContactMenu(senderId, PAGE_ACCESS_TOKEN) {
   const url = `https://graph.facebook.com/v23.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`;
 
   const body = {
     recipient: { id: senderId },
     messaging_type: "RESPONSE",
     message: {
-      text: "😩 Holboo bariks",
+      text: "📑 ❤❤❤ ️‟",
       quick_replies: [
         {
           content_type: "text",
-          title: "���� страниста",
+          title: "���� буления, нервол",
           payload: "CONTACT_ADDRESS"
         },
         {
           content_type: "text",
-          title: "🏗 Ajilchdby oprofail",
+          title: "👩‍🎨 Ажилчдын",
           payload: "CONTACT_PROFILES"
         }
       ]
@@ -34,6 +34,6 @@ async function sendContactMenu(senderId, PAGE_ACCESS_TOKEN) {
     }
     return data;
   } catch (err) {
-    console.error("Network error", err);
+    console.error("Network error", err){
   }
 }
