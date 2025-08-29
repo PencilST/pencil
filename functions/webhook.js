@@ -1,4 +1,4 @@
-import sendContactMenu from "./sendContactMenu.js";
+import { sendContactMenu } from "./sendContactMenu.js";
 
 export default {
   async fetch(request, env) {
