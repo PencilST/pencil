@@ -15,7 +15,7 @@ export default {
       }
     }
 
-    // ✅ Handle incoming messages (no signature verify)
+    // ✅ Handle incoming messages
     if (request.method === "POST") {
       try {
         const raw = await request.text();
@@ -34,14 +34,16 @@ export default {
           for (const entry of body.entry) {
             for (const event of entry.messaging ?? []) {
               const senderId = event.sender?.id;
-              const payload = event.message?.quick_reply?.payload;
+              const payload =
+                event.message?.quick_reply?.payload ||
+                event.postback?.payload;
 
               if (!senderId) {
                 console.error("⚠️ Missing senderId:", event);
                 continue;
               }
 
-              if (payload === "CONTACT") {
+              if (payload === "CONTACT" || payload === "MENU_CONTACT") {
                 await sendContactMenu(senderId, env.PAGE_ACCESS_TOKEN);
               } else if (payload === "CONTACT_ADDRESS") {
                 await sendText(
@@ -51,6 +53,8 @@ export default {
                 );
               } else if (payload === "CONTACT_PROFILES") {
                 await sendText(senderId, "👩‍🎨 Ажилчдын профайл", env.PAGE_ACCESS_TOKEN);
+              } else if (payload) {
+                console.log("ℹ️ Unknown payload:", payload);
               }
             }
           }
