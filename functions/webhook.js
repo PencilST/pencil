@@ -35,27 +35,14 @@ export default {
                 if (payload === "GET_STARTED") {
                   await sendText(
                     senderId,
-                    "👋 Сайн байна уу! Харандаа чатбот таныг угтаж байна.\n\n📌 Та эндээс дараах мэдээллийг авах боломжтой:\n🏢 Манай үйлчилгээний тухай\n💻 Програм, техникийн зөвлөгөө\n📞 Холбоо барих\n\nДоорх туслах цэсээс сонгоод эхлээрэй ⬇️",
-                    env.PAGE_ACCESS_TOKEN
+                    "👋 Сайн байна уу! Харандаа чатбот таныг угтаж байна.\n\n📌 Та эндээс дараах мэдээллийг авах боломжтой:\n🏢 Байгууллагын танилцуулга\n📚 Үйлчилгээний заавар\n📞 Холбоо барих"
                   );
                 } else if (payload === "MENU_OPERATIONS") {
-                  await sendText(
-                    senderId,
-                    "🏢 Манай үйлчилгээний дэлгэрэнгүй мэдээлэл...",
-                    env.PAGE_ACCESS_TOKEN
-                  );
+                  await sendText(senderId, "📌 Манай үйлчилгээний ажиллагааны талаар...");
                 } else if (payload === "MENU_INFO") {
-                  await sendText(
-                    senderId,
-                    "💻 Програм, техникийн зөвлөгөө...",
-                    env.PAGE_ACCESS_TOKEN
-                  );
+                  await sendText(senderId, "ℹ️ Манай байгууллагын тухай дэлгэрэнгүй мэдээлэл...");
                 } else if (payload === "MENU_CONTACT") {
-                  await sendText(
-                    senderId,
-                    "📞 Холбоо барих мэдээлэл...",
-                    env.PAGE_ACCESS_TOKEN
-                  );
+                  await sendText(senderId, "📞 Бидэнтэй холбогдох мэдээлэл...");
                 }
               }
             }
@@ -72,17 +59,18 @@ export default {
   },
 };
 
-// 🟢 Welcome Message
+// ========================
+// ✅ Welcome Message
 async function sendWelcomeMessage(senderId, PAGE_ACCESS_TOKEN) {
   const url = `https://graph.facebook.com/v16.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`;
   const body = {
     recipient: { id: senderId },
     message: {
-      text: "👋 Тавтай морил! Доорх сонголтоос сонгоно уу:",
+      text: "👋 Сайн байна уу? Харандаа чатбот танд дараах цэсийг санал болгож байна:",
       quick_replies: [
-        { content_type: "text", title: "🏢 Үйлчилгээ", payload: "MENU_OPERATIONS" },
-        { content_type: "text", title: "💻 Зөвлөгөө", payload: "MENU_INFO" },
-        { content_type: "text", title: "📞 Холбоо", payload: "MENU_CONTACT" },
+        { content_type: "text", title: "📌 Үйлчилгээ", payload: "MENU_OPERATIONS" },
+        { content_type: "text", title: "ℹ️ Мэдээлэл", payload: "MENU_INFO" },
+        { content_type: "text", title: "📞 Холбоо барих", payload: "MENU_CONTACT" },
       ],
     },
   };
@@ -93,7 +81,7 @@ async function sendWelcomeMessage(senderId, PAGE_ACCESS_TOKEN) {
   });
 }
 
-// 🟢 Simple Text Message
+// ✅ Simple Text Message
 async function sendText(senderId, text, PAGE_ACCESS_TOKEN) {
   const url = `https://graph.facebook.com/v16.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`;
   const body = {
