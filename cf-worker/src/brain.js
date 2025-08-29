@@ -5,18 +5,18 @@ import { faq } from "./faq.js";
 export function brain(text) {
   const t = normalize(text);
 
-  // --- Мэндчилгээ шалгах ---
+  // --- Мэндчилгээ ---
   const greetAnswer = greet(t);
   if (greetAnswer) {
     return greetAnswer;
   }
 
-  // --- FAQ шалгах (жишээ нь: клип) ---
+  // --- FAQ (жишээ: клип) ---
   const faqAnswer = faq(t);
   if (faqAnswer) {
     return faqAnswer;
   }
 
-  // --- Хэрэв танигдаагүй бол ---
+  // --- Default fallback ---
   return "🤔 Чиний асуултыг сайн ойлгосонгүй ээ...";
 }
