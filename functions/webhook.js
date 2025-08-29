@@ -16,103 +16,43 @@ export default {
     // ✅ Handle incoming messages
     if (request.method === "POST") {
       try {
-        const body = await request.json();
+        const signature256 = request.headers.get("x-hub-signature-256");
+        const raw = await request.text();
 
-        if (body.object === "page") {
-          for (const entry of body.entry) {
-            for (const event of entry.messaging) {
-              if (event.message && event.sender) {
-                const senderId = event.sender.id;
-                await sendWelcomeMessage(senderId, env.PAGE_ACCESS_TOKEN);
-              }
-
-              if (event.postback || (event.message && event.message.quick_reply)) {
-                const payload =
-                  event.postback?.payload || event.message.quick_reply.payload;
-
-                if (payload === "GET_STARTED") {
-                  await sendWelcomeMessage(senderId, env.PAGE_ACCESS_TOKEN);
-                } else if (payload === "MENU_OPERATIONS") {
-                  await sendText(senderId, "📌 Манай үйлчилгээний ажиллагааны талаар...", env.PAGE_ACCESS_TOKEN);
-                } else if (payload === "MENU_INFO") {
-                  await sendText(senderId, "ℹ️ Манай байгууллагын тухай дэлгэрэнгүй мэдээлэл...", env.PAGE_ACCESS_TOKEN);
-                } else if (payload === "MENU_CONTACT") {
-                  const url = `https://graph.facebook.com/v16.0/me/messages?access_token=${env.PAGE_ACCESS_TOKEN}`
-                  const body = {
-                    recipient: {id: senderId},
-                    message: {attachment: {
-                      type: "template",
-                      payload: {
-                        template_type: "button",
-                        text: "🔟 мункашия послен заработрания",
-                        buttons: [
-                          { type: "postback", title: "👵 Картерго", payload: "CONTACT_ADDRESS"},
-                          { type: "postback", title: "🐟 Аворай Пробавиного", payload: "CONTACT_PROFILES"}
-                        ]
-                      }
-                    }}
-                  };
-                  await fetch(url, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(body),
-                });
-                } else if (payload === "CONTACT_ADDRESS") {
-                  await sendText(senderId, "👥 Manai studi: UB 条, тобрасанный...\n🐥 Utas helber: +976 99112233\n🐙 Imeil: info@studio.mn", env.PAGE_ACCESS_TOKEN);
-                } else if (payload === "CONTACT_PROFILES") {
-                  await sendText(senderId, "🌤 Ajilchd/Uran buteelchdiin profail: tun udahgi…", env.PAGE_ACCESS_TOKEN);
-                }
-              }
-            }
+        // Try parsing JSON body
+        let body;
+        try {
+          body = JSON.parse(raw);
+        } catch {
+          return new Response("Invalid JSON", { status: 400 });
         }
 
+        // Signature verification
+        if (signature256) {
+          const encoder = new TextEncoder();
+          const key = await crypto.subtle.importKey(
+            "raw",
+            encoder.encode(env.APP_SECRET),
+            { name: "HMAC", hash: { name: "SHA-256" } },
+            false,
+            ["sign"]
+          );
+          const mac = await crypto.subtle.sign("HMAC", key, encoder.encode(raw));
+          const signature = "sha256=" + Array.from(new Uint8Array(mac))
+            .map(b => b.toString(16).padStart("0"))
+            .join("");
+          if (signature !== signature256) {
+            return new Response("Invalid signature", { status: 403 });
+          }
+        }
+
+        // – Handle event here
         return new Response("EVENT_RECEIVED", { status: 200 });
-        catch (err) {
-        return new Response("Error", { status: 500 });
+      } catch (err) {
+        return new Response("Error: " + err.message, { status: 500 });
       }
     }
 
     return new Response("Not found", { status: 404 });
-  },
+  }
 };
-
-// Welcome Message (Button Template)
-async function sendWelcomeMessage(senderId, PAGE_ACCESS_TOKEN) {
-  const url = `https://graph.facebook.com/v16.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`;
-  const body = {
-    recipient: { id: senderId },
-    message: {
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "button",
-          text: "👋 Тавтай морил! Доорх сонголтоос сонгоно уу:",
-          buttons: [
-            { type: "postback", title: "📌 Үйлчилгээ"x
-            { type: "postback", title: "ℹ️ Мэдээлэл", payload: "MENU_INFO" },
-            { type: "postback", title: "📞 Холбоо барих", payload: "MENU_CONTACT" }
-          ]
-        }
-      }
-    }
-  };
-  await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-}
-
-// Simple Text Message
-async function sendText(senderId, text, PAGE_ACCESS_TOKEN) {
-  const url = `https://graph.facebook.com/v16.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`;
-  const body = {
-    recipient: { id: senderId },
-    message: { text },
-  };
-  await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-}
