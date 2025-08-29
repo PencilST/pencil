@@ -55,7 +55,7 @@ export default {
               } else if (payload === "CONTACT_ADDRESS") {
                 await sendText(
                   senderId,
-                  "🏢 Манай студи:\n📍 Хаяг: УБ, ...\n📞 Утас: +976 99112233\n✉️ Имэйл: info@studio.mn",
+                  "🏢 Манай студи:\n📍 Хаяг: УБ, ...\n📞 Утас: +976 88302221\n✉️ Имэйл: info@studio.mn",
                   env.PAGE_ACCESS_TOKEN
                 );
               } else if (payload === "CONTACT_PROFILES") {
