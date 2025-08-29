@@ -4,7 +4,7 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // ✅ Verification (Facebook webhook setup)
+    // ✅ Facebook webhook verification
     if (request.method === "GET") {
       const token = url.searchParams.get("hub.verify_token");
       const challenge = url.searchParams.get("hub.challenge");
@@ -15,60 +15,80 @@ export default {
       }
     }
 
-    // ص داز Handle incoming messages
+    // ✅ Handle incoming messages
     if (request.method === "POST") {
       try {
         const signature256 = request.headers.get("x-hub-signature-256");
         const raw = await request.text();
 
-        // Try parsing JSON body
+        // Parse JSON body safely
         let body;
         try {
           body = JSON.parse(raw);
         } catch {
+          console.error("❌ Invalid JSON:", raw);
           return new Response("Invalid JSON", { status: 400 });
         }
 
-        // Signature verification
+        // ✅ Signature verification
         if (signature256) {
           const encoder = new TextEncoder();
           const key = await crypto.subtle.importKey(
             "raw",
             encoder.encode(env.APP_SECRET),
-            { name: "HMAC", hash: { name: "SHA-256" } },
+            { name: "HMAC", hash: "SHA-256" },
             false,
-            ["sign"]
+            ["verify"]
           );
-          const mac = await crypto.subtle.sign("HMAC", key, encoder.encode(raw));
-          const signature = "sha256=" + Array.from(new Uint8Array(mac))
-            .map(b => b.toString(16).padStart("0"))
-            .join("");
-          if (signature !== signature256) {
+
+          const expected = hexToBytes(signature256.replace("sha256=", ""));
+          const ok = await crypto.subtle.verify(
+            "HMAC",
+            key,
+            expected,
+            encoder.encode(raw)
+          );
+
+          if (!ok) {
+            console.error("❌ Invalid signature");
             return new Response("Invalid signature", { status: 403 });
           }
         }
 
-        // – Handle payloads alt
-        if (body.entry) {
+        // 👉 Handle payloads safely
+        if (body?.entry) {
           for (const entry of body.entry) {
-            for (const event of entry.messaging) {
-              if (event.message && event.message.quick_reply) {
-                const payload = event.message.quick_reply.payload;
-                const senderId = event.sender.id;
+            for (const event of entry.messaging ?? []) {
+              const senderId = event.sender?.id;
+              const payload = event.message?.quick_reply?.payload;
 
-                if (payload === "CONTACT") {
-                  await sendContactMenu(senderId, env.PAGE_ACCESS_TOKEN);
-                } else if (payload === "CONTACT_ADDRESS") {
-                  await sendText(senderId, "���� Manai studi:\n🤱 Hayag: UB, ...\n🐥 Utas helber: +976 99112233\n🐙 Imeil: info@studio.mn", env.PAGE_ACCESS_TOKEN);
-                } else if (payload === "CONTACT_PROFILES") {
-                  await sendText(senderId, "“ ajilchdyn profil", env.PAGE_ACCESS_TOKEN);
-                }
+              if (!senderId) {
+                console.error("⚠️ Missing senderId in event:", event);
+                continue;
+              }
+
+              if (payload === "CONTACT") {
+                await sendContactMenu(senderId, env.PAGE_ACCESS_TOKEN);
+              } else if (payload === "CONTACT_ADDRESS") {
+                await sendText(
+                  senderId,
+                  "🏢 Манай студи:\n📍 Хаяг: УБ, ...\n📞 Утас: +976 99112233\n✉️ Имэйл: info@studio.mn",
+                  env.PAGE_ACCESS_TOKEN
+                );
+              } else if (payload === "CONTACT_PROFILES") {
+                await sendText(senderId, "👩‍🎨 Ажилчдын профайл", env.PAGE_ACCESS_TOKEN);
+              } else {
+                console.log("ℹ️ Unknown payload:", payload);
+              }
             }
           }
+        } else {
+          console.error("⚠️ No entry in body:", body);
         }
 
         return new Response("EVENT_RECEIVED", { status: 200 });
       } catch (err) {
+        console.error("💥 Worker crashed:", err);
         return new Response("Error: " + err.message, { status: 500 });
       }
     }
@@ -77,7 +97,7 @@ export default {
   }
 };
 
-// Simple text message
+// Simple text reply
 async function sendText(senderId, text, PAGE_ACCESS_TOKEN) {
   const url = `https://graph.facebook.com/v23.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`;
   const body = {
@@ -90,4 +110,13 @@ async function sendText(senderId, text, PAGE_ACCESS_TOKEN) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
+}
+
+// Helper to convert hex signature → Uint8Array
+function hexToBytes(hex) {
+  const bytes = new Uint8Array(Math.ceil(hex.length / 2));
+  for (let i = 0; i < bytes.length; i++) {
+    bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
+  }
+  return bytes;
 }
