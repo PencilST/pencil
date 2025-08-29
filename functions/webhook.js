@@ -97,10 +97,12 @@ export default {
     const res = await fetch(apiUrl);
     const data = await res.json();
 
+    // 🔍 API-гаас яг юу ирж байгааг шалгах
+    console.log("📥 Profile API response:", JSON.stringify(data, null, 2));
+
     if (!data || !data.data || !data.data.url) {
       console.error("⚠️ Profile API зураг буцаасангүй:", JSON.stringify(data));
-      // Default зураг зааж өгнө
-      return "https://i.imgur.com/8Km9tLL.jpg"; 
+      return "https://i.imgur.com/8Km9tLL.jpg"; // Default зураг
     }
 
     console.log("✅ Profile pic URL for", id, ":", data.data.url);
@@ -108,11 +110,9 @@ export default {
 
   } catch (err) {
     console.error("❌ Profile API алдаа:", id, err.message);
-    // Default зураг зааж өгнө
-    return "https://i.imgur.com/8Km9tLL.jpg"; 
+    return "https://i.imgur.com/8Km9tLL.jpg"; // Default зураг
   }
 }
-
 
                 try {
                   const sunbaatarPic = await getProfilePic("100003275328756"); // Наранбаатар
