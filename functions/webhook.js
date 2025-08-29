@@ -87,75 +87,84 @@ export default {
 
               // --- Ажилчдын профайл ---
               else if (payload === "CONTACT_PROFILES") {
+                console.log("👉 CONTACT_PROFILES цэс сонгогдлоо");
+
                 async function getProfilePic(username) {
-                  const res = await fetch(
-                    `https://graph.facebook.com/${username}/picture?width=400&height=400&redirect=0&access_token=${env.PAGE_ACCESS_TOKEN}`
-                  );
-                  const data = await res.json();
-                  return data.data.url;
+                  const apiUrl = `https://graph.facebook.com/${username}/picture?width=400&height=400&redirect=0&access_token=${env.PAGE_ACCESS_TOKEN}`;
+                  console.log("📡 Fetch profile pic API:", apiUrl);
+
+                  try {
+                    const res = await fetch(apiUrl);
+                    const data = await res.json();
+
+                    if (!data || !data.data || !data.data.url) {
+                      console.error("⚠️ Profile API response буруу байна:", JSON.stringify(data));
+                      return "";
+                    }
+
+                    console.log("✅ Profile API response for", username, ":", data.data.url);
+                    return data.data.url;
+                  } catch (err) {
+                    console.error("❌ Profile API алдаа:", username, err.message);
+                    return "";
+                  }
                 }
 
-                // 3 хүний зураг URL-г татах
-                const sunbaatarPic = await getProfilePic("sunbaatar");
-                const gibsonPic = await getProfilePic("gibson.natsagdorj");
-                const yajPic = await getProfilePic("yajzaiavdagyum");
+                try {
+                  const sunbaatarPic = await getProfilePic("sunbaatar");
+                  const gibsonPic = await getProfilePic("gibson.natsagdorj");
+                  const yajPic = await getProfilePic("yajzaiavdagyum");
 
-                const urlFb = `https://graph.facebook.com/v23.0/me/messages?access_token=${env.PAGE_ACCESS_TOKEN}`;
-                const bodyProfiles = {
-                  recipient: { id: senderId },
-                  message: {
-                    attachment: {
-                      type: "template",
-                      payload: {
-                        template_type: "generic",
-                        elements: [
-                          {
-                            title: "☀️ Сүнбаатар",
-                            image_url: sunbaatarPic,
-                            subtitle: "Менежер — Бизнесийн удирдлага",
-                            buttons: [
-                              {
-                                type: "web_url",
-                                url: "https://www.facebook.com/sunbaatar",
-                                title: "Facebook харах"
-                              }
-                            ]
-                          },
-                          {
-                            title: "🎸 Гибсон Нацагдорж",
-                            image_url: gibsonPic,
-                            subtitle: "Хөгжимчин — Гитарист",
-                            buttons: [
-                              {
-                                type: "web_url",
-                                url: "https://www.facebook.com/gibson.natsagdorj",
-                                title: "Facebook харах"
-                              }
-                            ]
-                          },
-                          {
-                            title: "🤔 Яаж Зайавдагюм",
-                            image_url: yajPic,
-                            subtitle: "Инженер — Програм хангамж",
-                            buttons: [
-                              {
-                                type: "web_url",
-                                url: "https://www.facebook.com/yajzaiavdagyum",
-                                title: "Facebook харах"
-                              }
-                            ]
-                          }
-                        ]
+                  console.log("🖼️ Final picture URLs:", { sunbaatarPic, gibsonPic, yajPic });
+
+                  const urlFb = `https://graph.facebook.com/v23.0/me/messages?access_token=${env.PAGE_ACCESS_TOKEN}`;
+                  const bodyProfiles = {
+                    recipient: { id: senderId },
+                    message: {
+                      attachment: {
+                        type: "template",
+                        payload: {
+                          template_type: "generic",
+                          elements: [
+                            {
+                              title: "☀️ Сүнбаатар",
+                              image_url: sunbaatarPic,
+                              subtitle: "Менежер — Бизнесийн удирдлага",
+                              buttons: [
+                                { type: "web_url", url: "https://www.facebook.com/sunbaatar", title: "Facebook харах" }
+                              ]
+                            },
+                            {
+                              title: "🎸 Гибсон Нацагдорж",
+                              image_url: gibsonPic,
+                              subtitle: "Хөгжимчин — Гитарист",
+                              buttons: [
+                                { type: "web_url", url: "https://www.facebook.com/gibson.natsagdorj", title: "Facebook харах" }
+                              ]
+                            },
+                            {
+                              title: "🤔 Яаж Зайавдагюм",
+                              image_url: yajPic,
+                              subtitle: "Инженер — Програм хангамж",
+                              buttons: [
+                                { type: "web_url", url: "https://www.facebook.com/yajzaiavdagyum", title: "Facebook харах" }
+                              ]
+                            }
+                          ]
+                        }
                       }
                     }
-                  }
-                };
+                  };
 
-                await fetch(urlFb, {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify(bodyProfiles),
-                });
+                  await fetch(urlFb, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(bodyProfiles),
+                  });
+                  console.log("✅ Profiles илгээгдлээ Messenger рүү");
+                } catch (e) {
+                  console.error("❌ CONTACT_PROFILES алдаа:", e.message);
+                }
               }
 
               // --- Үйлчилгээ ---
@@ -187,6 +196,7 @@ export default {
 
         return new Response("EVENT_RECEIVED", { status: 200 });
       } catch (err) {
+        console.error("❌ Worker нийт алдаа:", err.message);
         return new Response("Error: " + err.message, { status: 500 });
       }
     }
