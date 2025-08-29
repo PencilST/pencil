@@ -1,4 +1,4 @@
-name = "pencil-bot"
+name = "deploy-pencil"
 compatibility_date = "2025-08-29"
 main = "functions/webhook.js"
 account_id = "2753dad2f17d6d3875b7fc442a1fe984"
