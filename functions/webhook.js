@@ -50,16 +50,12 @@ export default {
                 continue;
               }
 
-              if (payload === "CONTACT" || payload === "MENU_CONTACT") {
-                await sendContactMenu(senderId, env.PAGE_ACCESS_TOKEN);
-              } else if (payload === "CONTACT_ADDRESS") {
+              if (payload === "CONTACT_ADDRESS") {
                 await sendTextWithQuickReplies(
                   senderId,
                   "🏢 Манай хаяг:\n📍 Улаанбаатар, ...\n📞 Утас: +976 99112233\n✉️ Имэйл: info@studio.mn",
                   [
-                    { content_type: "text", title: "🏢 Хаяг, дугаар", payload: "CONTACT_ADDRESS" },
-                    { content_type: "text", title: "🌐 Профайл", payload: "CONTACT_PROFILES" },
-                    { content_type: "text", title: "📞 Холбоо барих", payload: "MENU_CONTACT" }
+                    { content_type: "text", title: "⬅️ Буцах", payload: "MENU_MAIN" }
                   ],
                   env.PAGE_ACCESS_TOKEN
                 );
@@ -68,17 +64,24 @@ export default {
                   senderId,
                   "🌐 Манай профайлууд:",
                   [
-                    { content_type: "text", title: "🏢 Хаяг, дугаар", payload: "CONTACT_ADDRESS" },
-                    { content_type: "text", title: "🌐 Профайл", payload: "CONTACT_PROFILES" },
-                    { content_type: "text", title: "📞 Холбоо барих", payload: "MENU_CONTACT" }
+                    { content_type: "text", title: "⬅️ Буцах", payload: "MENU_MAIN" }
                   ],
                   env.PAGE_ACCESS_TOKEN
                 );
-              } else if (payload === "GET_STARTED") {
+              } else if (payload === "MENU_CONTACT") {
+                await sendTextWithQuickReplies(
+                  senderId,
+                  "📞 Холбоо барих цэс",
+                  [
+                    { content_type: "text", title: "⬅️ Буцах", payload: "MENU_MAIN" }
+                  ],
+                  env.PAGE_ACCESS_TOKEN
+                );
+              } else if (payload === "MENU_MAIN" || payload === "GET_STARTED") {
                 const greeting = getGreeting();
                 await sendTextWithQuickReplies(
                   senderId,
-                  `${greeting}! 👋 Мэдээлэл авахын тулд доорх ☰ цэсийг дарна уу.`,
+                  `${greeting}! 👋 Үндсэн цэсээс сонгоно уу 👇`,
                   [
                     { content_type: "text", title: "🏢 Хаяг, дугаар", payload: "CONTACT_ADDRESS" },
                     { content_type: "text", title: "🌐 Профайл", payload: "CONTACT_PROFILES" },
