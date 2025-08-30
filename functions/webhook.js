@@ -50,15 +50,15 @@ export default {
                   senderId,
                   `${greeting}! 🤗 Манай чатбот танд дараах сонголтуудыг санал болгож байна:`,
                   [
-                    { content_type: "text", title: "🏢 Ажил үйлчилгээ", payload: "MENU_SERVICE" },
-                    { content_type: "text", title: "💻 Мэдээлэл / Зөвлөгөө", payload: "MENU_INFO" },
+                    { content_type: "text", title: "📋 Үйлчилгээ", payload: "MENU_SERVICE" },
+                    { content_type: "text", title: "ℹ️ Тухай", payload: "MENU_INFO" },
                     { content_type: "text", title: "📞 Холбоо барих", payload: "MENU_CONTACT" }
                   ],
                   env.PAGE_ACCESS_TOKEN
                 );
               }
 
-              // --- Ажил үйлчилгээ ---
+              // --- Үйлчилгээ ---
               else if (payload === "MENU_SERVICE") {
                 await sendTextWithQuickReplies(
                   senderId,
@@ -68,11 +68,11 @@ export default {
                 );
               }
 
-              // --- Мэдээлэл / Зөвлөгөө ---
+              // --- Тухай ---
               else if (payload === "MENU_INFO") {
                 await sendTextWithQuickReplies(
                   senderId,
-                  "Энд та мэдээлэл болон зөвлөгөөг авах боломжтой. 😊",
+                  "Манай баг олон жилийн туршлагатай бөгөөд хэрэглэгчдэд зориулсан чатбот болон веб үйлчилгээ хөгжүүлдэг.",
                   [{ content_type: "text", title: "🏠 Буцах", payload: "MENU_MAIN" }],
                   env.PAGE_ACCESS_TOKEN
                 );
