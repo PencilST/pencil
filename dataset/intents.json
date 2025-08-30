@@ -1,0 +1,10 @@
+{
+  "intents": [
+    "GREETING",
+    "CLIP_SERVICE",
+    "FAQ_CONTACT",
+    "FAQ_INFO",
+    "GUIDE",
+    "FALLBACK"
+  ]
+}
