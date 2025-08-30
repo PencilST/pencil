@@ -48,32 +48,12 @@ export default {
                 const greeting = getGreeting();
                 await sendTextWithQuickReplies(
                   senderId,
-                  `${greeting}! 🤗 Манай чатбот танд дараах сонголтуудыг санал болгож байна:`,
+                  `${greeting}! 👋 Үндсэн цэсээс сонгоно уу 👇`,
                   [
-                    { content_type: "text", title: "📋 Үйлчилгээ", payload: "MENU_SERVICE" },
-                    { content_type: "text", title: "ℹ️ Тухай", payload: "MENU_INFO" },
+                    { content_type: "text", title: "🏢 Ажил үйлчилгээ", payload: "MENU_SERVICE" },
+                    { content_type: "text", title: "💻 Мэдээлэл / Зөвлөгөө", payload: "MENU_INFO" },
                     { content_type: "text", title: "📞 Холбоо барих", payload: "MENU_CONTACT" }
                   ],
-                  env.PAGE_ACCESS_TOKEN
-                );
-              }
-
-              // --- Үйлчилгээ ---
-              else if (payload === "MENU_SERVICE") {
-                await sendTextWithQuickReplies(
-                  senderId,
-                  "Манай үйлчилгээний талаар дэлгэрэнгүй асуугаарай...",
-                  [{ content_type: "text", title: "🏠 Буцах", payload: "MENU_MAIN" }],
-                  env.PAGE_ACCESS_TOKEN
-                );
-              }
-
-              // --- Тухай ---
-              else if (payload === "MENU_INFO") {
-                await sendTextWithQuickReplies(
-                  senderId,
-                  "Манай баг олон жилийн туршлагатай бөгөөд хэрэглэгчдэд зориулсан чатбот болон веб үйлчилгээ хөгжүүлдэг.",
-                  [{ content_type: "text", title: "🏠 Буцах", payload: "MENU_MAIN" }],
                   env.PAGE_ACCESS_TOKEN
                 );
               }
@@ -82,8 +62,142 @@ export default {
               else if (payload === "MENU_CONTACT") {
                 await sendTextWithQuickReplies(
                   senderId,
-                  "📞 Холбоо барих мэдээлэл:\nУтас: +976 99112233\nИмэйл: info@studio.mn",
-                  [{ content_type: "text", title: "🏠 Буцах", payload: "MENU_MAIN" }],
+                  "📞 Холбоо барих цэс:",
+                  [
+                    { content_type: "text", title: "🏢 Хаяг, дугаар", payload: "CONTACT_ADDRESS" },
+                    { content_type: "text", title: "👩‍💼 Ажилчдын профайл", payload: "CONTACT_PROFILES" },
+                    { content_type: "text", title: "⬅️ Буцах", payload: "MENU_MAIN" }
+                  ],
+                  env.PAGE_ACCESS_TOKEN
+                );
+              }
+
+              // --- Хаяг ---
+              else if (payload === "CONTACT_ADDRESS") {
+                await sendTextWithQuickReplies(
+                  senderId,
+                  "🏢 Манай хаяг:\n📍 Улаанбаатар, ...\n📞 Утас: +976 99112233\n✉️ Имэйл: info@studio.mn",
+                  [
+                    { content_type: "text", title: "👩‍💼 Ажилчдын профайл", payload: "CONTACT_PROFILES" },
+                    { content_type: "text", title: "⬅️ Буцах", payload: "MENU_CONTACT" }
+                  ],
+                  env.PAGE_ACCESS_TOKEN
+                );
+              }
+
+              // --- Ажилчдын профайл ---
+              else if (payload === "CONTACT_PROFILES") {
+                console.log("👉 CONTACT_PROFILES цэс сонгогдлоо");
+
+                async function getProfilePic(id) {
+  const apiUrl = `https://graph.facebook.com/${id}/picture?width=400&height=400&redirect=0&access_token=${env.PAGE_ACCESS_TOKEN}`;
+  console.log("📸 Fetch profile pic API:", apiUrl);
+
+  try {
+    const res = await fetch(apiUrl);
+    const data = await res.json();
+
+    // Debug log
+    console.log("📥 Profile API response:", JSON.stringify(data, null, 2));
+
+    // Хэрэв алдаа эсвэл хоосон бол default зураг буцаа
+    if (!data || !data.data || !data.data.url) {
+      console.warn("⚠️ Profile API зураг буцаасангүй:", JSON.stringify(data));
+      return "https://i.imgur.com/8Km9tLL.jpg"; // Default
+    }
+
+    // Хэрэв Facebook "is_silhouette": true гэж буцаавал бас default ашигла
+    if (data.data.is_silhouette === true) {
+      console.warn("⚠️ Profile private тул default зураг хэрэглэж байна:", id);
+      return "https://i.imgur.com/8Km9tLL.jpg";
+    }
+
+    console.log("✅ Profile pic URL for", id, ":", data.data.url);
+    return data.data.url;
+
+  } catch (err) {
+    console.error("❌ Profile API алдаа:", id, err.message);
+    return "https://i.imgur.com/8Km9tLL.jpg"; // Default
+  }
+}
+
+                try {
+                  const sunbaatarPic = await getProfilePic("100003275328756"); // Наранбаатар
+                  const gibsonPic = await getProfilePic("100003636016682");    // Нацагдорж
+                  const ganbatPic = await getProfilePic("100080558270234");    // Ганбат
+
+                  console.log("🖼️ Final picture URLs:", { sunbaatarPic, gibsonPic, ganbatPic });
+
+                  const urlFb = `https://graph.facebook.com/v23.0/me/messages?access_token=${env.PAGE_ACCESS_TOKEN}`;
+                  const bodyProfiles = {
+                    recipient: { id: senderId },
+                    message: {
+                      attachment: {
+                        type: "template",
+                        payload: {
+                          template_type: "generic",
+                          elements: [
+                            {
+                              title: "☀️ Наранбаатар",
+                              image_url: sunbaatarPic,
+                              subtitle: "Менежер — Бизнесийн удирдлага",
+                              buttons: [
+                                { type: "web_url", url: "https://www.facebook.com/100003275328756", title: "Facebook харах" }
+                              ]
+                            },
+                            {
+                              title: "🎸 Нацагдорж",
+                              image_url: gibsonPic,
+                              subtitle: "Хөгжимчин — Гитарист",
+                              buttons: [
+                                { type: "web_url", url: "https://www.facebook.com/100003636016682", title: "Facebook харах" }
+                              ]
+                            },
+                            {
+                              title: "🤔 Ганбат",
+                              image_url: ganbatPic,
+                              subtitle: "Инженер — Програм хангамж",
+                              buttons: [
+                                { type: "web_url", url: "https://www.facebook.com/100080558270234", title: "Facebook харах" }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  };
+
+                  await fetch(urlFb, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(bodyProfiles),
+                  });
+                  console.log("✅ Profiles илгээгдлээ Messenger рүү");
+                } catch (e) {
+                  console.error("❌ CONTACT_PROFILES алдаа:", e.message);
+                }
+              }
+
+              // --- Үйлчилгээ ---
+              else if (payload === "MENU_SERVICE") {
+                await sendTextWithQuickReplies(
+                  senderId,
+                  "🏢 Манай үйлчилгээний тухай мэдээлэл...",
+                  [
+                    { content_type: "text", title: "⬅️ Буцах", payload: "MENU_MAIN" }
+                  ],
+                  env.PAGE_ACCESS_TOKEN
+                );
+              }
+
+              // --- Мэдээлэл / Зөвлөгөө ---
+              else if (payload === "MENU_INFO") {
+                await sendTextWithQuickReplies(
+                  senderId,
+                  "💻 Мэдээлэл болон зөвлөгөө...",
+                  [
+                    { content_type: "text", title: "⬅️ Буцах", payload: "MENU_MAIN" }
+                  ],
                   env.PAGE_ACCESS_TOKEN
                 );
               }
@@ -93,7 +207,7 @@ export default {
 
         return new Response("EVENT_RECEIVED", { status: 200 });
       } catch (err) {
-        console.error("❌ Webhook алдаа:", err.message);
+        console.error("❌ Worker нийт алдаа:", err.message);
         return new Response("Error: " + err.message, { status: 500 });
       }
     }
@@ -102,17 +216,16 @@ export default {
   }
 };
 
-// --- Мэндчилгээ цагийн дагуу ---
 function getGreeting() {
   const now = new Date();
   const hour = (now.getUTCHours() + 8) % 24; // УБ цаг
-  if (hour >= 5 && hour < 12) return "Өглөөний мэнд";
-  if (hour >= 12 && hour < 17) return "Өдрийн мэнд";
-  if (hour >= 17 && hour < 21) return "Оройн мэнд";
-  return "Сайн шөнө";
+
+  if (hour >= 5 && hour < 12) return "Өглөөний мэнд 🌅";
+  if (hour >= 12 && hour < 17) return "Өдрийн мэнд ☀️";
+  if (hour >= 17 && hour < 21) return "Оройн мэнд 🌆";
+  return "Үдшийн мэнд 🌙";
 }
 
-// --- Текст хариу илгээх ---
 async function sendTextWithQuickReplies(senderId, text, quickReplies, PAGE_ACCESS_TOKEN) {
   const url = `https://graph.facebook.com/v23.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`;
   const body = {
