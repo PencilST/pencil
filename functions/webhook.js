@@ -1,4 +1,5 @@
 import sendContactMenu from "./sendContactMenu.js";
+import setupPersistentMenu from "./setupPersistentMenu.js";
 
 export default {
   async fetch(request, env) {
