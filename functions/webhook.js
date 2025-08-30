@@ -43,101 +43,22 @@ export default {
 
               if (!senderId) continue;
 
-              // --- Үндсэн мэндчилгээ ---
+              // --- Үндсэн цэс ---
               if (payload === "MENU_MAIN" || payload === "GET_STARTED") {
                 const greeting = getGreeting();
                 await sendTextWithQuickReplies(
                   senderId,
                   `${greeting}! 🤗 Манай чатбот танд дараах сонголтуудыг санал болгож байна:`,
                   [
-                    { content_type: "text", title: "📋 Үйлчилгээ", payload: "MENU_SERVICE" },
-                    { content_type: "text", title: "ℹ️ Тухай", payload: "MENU_INFO" },
+                    { content_type: "text", title: "🏢 Ажил үйлчилгээ", payload: "MENU_SERVICE" },
+                    { content_type: "text", title: "💻 Мэдээлэл / Зөвлөгөө", payload: "MENU_INFO" },
                     { content_type: "text", title: "📞 Холбоо барих", payload: "MENU_CONTACT" }
                   ],
                   env.PAGE_ACCESS_TOKEN
                 );
               }
 
-              // --- Холбоо барих ---
-              else if (payload === "MENU_CONTACT") {
-                await sendTextWithQuickReplies(
-                  senderId,
-                  "Холбоо барих мэдээлэл:\n📞 Утас: +976 99112233\n📧 Имэйл: info@studio.mn",
-                  [
-                    { content_type: "text", title: "ℹ️ Тухай", payload: "MENU_INFO" }
-                  ],
-                  env.PAGE_ACCESS_TOKEN
-                );
-              }
-
-              // --- Contact Profiles ---
-              else if (payload === "CONTACT_PROFILES") {
-                console.log("👉 CONTACT_PROFILES дуудлаа...");
-
-                async function getProfilePic(id) {
-                  const apiUrl = `https://graph.facebook.com/${id}/picture?width=400&height=400&redirect=0&access_token=${env.PAGE_ACCESS_TOKEN}`;
-                  try {
-                    const res = await fetch(apiUrl);
-                    const data = await res.json();
-                    return data?.data?.url || "https://i.imgur.com/8Km9tLL.jpg";
-                  } catch {
-                    return "https://i.imgur.com/8Km9tLL.jpg";
-                  }
-                }
-
-                const sunbaatarPic = await getProfilePic("100003275328756");
-                const gibsonPic = await getProfilePic("100003636016682");
-                const ganbatPic = await getProfilePic("100080558270234");
-
-                console.log("✅ Profiles:", { sunbaatarPic, gibsonPic, ganbatPic });
-
-                const urlFb = `https://graph.facebook.com/v23.0/me/messages?access_token=${env.PAGE_ACCESS_TOKEN}`;
-                const bodyProfiles = {
-                  recipient: { id: senderId },
-                  message: {
-                    attachment: {
-                      type: "template",
-                      payload: {
-                        template_type: "generic",
-                        elements: [
-                          {
-                            title: "Сунбаатар",
-                            image_url: sunbaatarPic,
-                            subtitle: "Багийн гишүүн",
-                            buttons: [
-                              { type: "web_url", url: "https://www.facebook.com/100003275328756", title: "Facebook хуудас" }
-                            ]
-                          },
-                          {
-                            title: "Гибсон",
-                            image_url: gibsonPic,
-                            subtitle: "Төслийн гишүүн",
-                            buttons: [
-                              { type: "web_url", url: "https://www.facebook.com/100003636016682", title: "Facebook хуудас" }
-                            ]
-                          },
-                          {
-                            title: "Ганбат",
-                            image_url: ganbatPic,
-                            subtitle: "Багийн ахлагч",
-                            buttons: [
-                              { type: "web_url", url: "https://www.facebook.com/100080558270234", title: "Facebook хуудас" }
-                            ]
-                          }
-                        ]
-                      }
-                    }
-                  }
-                };
-
-                await fetch(urlFb, {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify(bodyProfiles),
-                });
-              }
-
-              // --- Үйлчилгээ сонголт ---
+              // --- Ажил үйлчилгээ ---
               else if (payload === "MENU_SERVICE") {
                 await sendTextWithQuickReplies(
                   senderId,
@@ -147,11 +68,21 @@ export default {
                 );
               }
 
-              // --- Тухай ---
+              // --- Мэдээлэл / Зөвлөгөө ---
               else if (payload === "MENU_INFO") {
                 await sendTextWithQuickReplies(
                   senderId,
-                  "Манай баг олон жилийн туршлагатай бөгөөд хэрэглэгчдэд зориулсан чатбот болон веб үйлчилгээ хөгжүүлдэг.",
+                  "Энд та мэдээлэл болон зөвлөгөөг авах боломжтой. 😊",
+                  [{ content_type: "text", title: "🏠 Буцах", payload: "MENU_MAIN" }],
+                  env.PAGE_ACCESS_TOKEN
+                );
+              }
+
+              // --- Холбоо барих ---
+              else if (payload === "MENU_CONTACT") {
+                await sendTextWithQuickReplies(
+                  senderId,
+                  "📞 Холбоо барих мэдээлэл:\nУтас: +976 99112233\nИмэйл: info@studio.mn",
                   [{ content_type: "text", title: "🏠 Буцах", payload: "MENU_MAIN" }],
                   env.PAGE_ACCESS_TOKEN
                 );
@@ -171,6 +102,7 @@ export default {
   }
 };
 
+// --- Мэндчилгээ цагийн дагуу ---
 function getGreeting() {
   const now = new Date();
   const hour = (now.getUTCHours() + 8) % 24; // УБ цаг
@@ -180,6 +112,7 @@ function getGreeting() {
   return "Сайн шөнө";
 }
 
+// --- Текст хариу илгээх ---
 async function sendTextWithQuickReplies(senderId, text, quickReplies, PAGE_ACCESS_TOKEN) {
   const url = `https://graph.facebook.com/v23.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`;
   const body = {
