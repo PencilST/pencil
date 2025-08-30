@@ -6,8 +6,8 @@ export default async function setupPersistentMenu(PAGE_ACCESS_TOKEN) {
         locale: "default",
         composer_input_disabled: false,
         call_to_actions: [
-          { type: "postback", title: "🏢 Ажил үйлчилгээ", payload: "MENU_SERVICE" },
-          { type: "postback", title: "💻 Мэдээлэл / Зөвлөгөө", payload: "MENU_INFO" },
+          { type: "postback", title: "📋 Үйлчилгээ", payload: "MENU_SERVICE" },
+          { type: "postback", title: "ℹ️ Тухай", payload: "MENU_INFO" },
           { type: "postback", title: "📞 Холбоо барих", payload: "MENU_CONTACT" }
         ]
       }
