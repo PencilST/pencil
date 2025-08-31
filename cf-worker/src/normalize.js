@@ -1,51 +1,67 @@
 export function normalize(text) {
-  const t = text.toLowerCase().trim();
+  if (!text) return "";
 
+  let t = text.toLowerCase().trim();
+
+  // Түгээмэл алдаатай бичлэгүүдийг зөв болгох mapping
   const mapping = {
-    // --- "хөөе" variations (латин, алдаатай) ---
-    "huue": "хөөе",
-    "hue": "хөөе",
-    "hoye": "хөөе",
-    "huuie": "хөөе",
-    "huuye": "хөөе",
-    "hooie": "хөөе",
-    "hooe": "хөөе",
-    "hvue": "хөөе",
-    "hvve": "хөөе",
-    "hvvye": "хөөе",
-    "huvie": "хөөе",
-    "xvve": "хөөе",
-    "xvvye": "хөөе",
-    "xvvie": "хөөе",
-    "xvvyee": "хөөе",
+    // --- өмнөх байгаа үлдээсэн дүрмүүд ---
+    "huue": "үү",
+    "hue": "үү",
+    "hoy": "үү",
+    "huuie": "үү",
+    "huuye": "үү",
+    "hooe": "үү",
+    "hoo": "үү",
+    "huve": "үү",
+    "huvve": "үү",
+    "huvvie": "үү",
+    "huvvyee": "үү",
 
-    // --- "хөөе" variations (кирилл, алдаатай) ---
-    "хое": "хөөе",
-    "хоёё": "хөөе",
-    "хоёе": "хөөе",
-    "хүе": "хөөе",
-    "хүёё": "хөөе",
-    "хүёе": "хөөе",
-    "хоёёё": "хөөе",
-    "хүё": "хөөе",
+    // --- ТАНАЙХ variations ---
+    "tanai": "танайх",
+    "tnai": "танайх",
+    "tnaih": "танайх",
+    "tnay": "танайх",
+    "tna": "танайх",
 
-    // --- Клип variations ---
+    // --- КЛИП variations ---
     "clip": "клип",
     "klip": "клип",
-    "clib": "клип",
+    "clp": "клип",
     "klib": "клип",
+    "clib": "клип",
+    "клиби": "клип",
+    "клиб": "клип",
 
-    // --- Хийдэг variations ---
-    "hideg": "хийдэг",
-    "hiedeg": "хийдэг",
+    // --- ХИЙДЭГ variations ---
     "hiideg": "хийдэг",
     "hiddeg": "хийдэг",
     "hiidg": "хийдэг",
-    "hidg": "хийдэг"
+    "hidg": "хийдэг",
+    "hdeg": "хийдэг",
+    "hddg": "хийдэг",
+    "heedeg": "хийдэг",
+    "хийдг": "хийдэг",
+    "хийдег": "хийдэг",
+
+    // --- ҮҮ variations ---
+    "uu": "үү",
+    "vv": "үү",
+    "u": "үү",
+    "yu": "үү",
+    "y": "үү",
+    "ү": "үү",
+    "уу": "үү"
   };
 
+  // mapping dictionary-гээр солино
   if (mapping[t]) {
     return mapping[t];
   }
+
+  // нэмэлт regex цэвэрлэгээ (emoji, punctuation, etc.)
+  t = t.replace(/[^a-zа-яөү\s]/gi, "");
+
   return t;
 }
