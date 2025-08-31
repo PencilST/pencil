@@ -1,5 +1,6 @@
 import sendContactMenu from "./sendContactMenu.js";
 import setupPersistentMenu from "./setupPersistentMenu.js";
+import { brain } from "../cf-worker/src/brain.js"; // 🆕 Нэмсэн import
 
 export default {
   async fetch(request, env) {
@@ -91,43 +92,33 @@ export default {
                 console.log("👉 CONTACT_PROFILES цэс сонгогдлоо");
 
                 async function getProfilePic(id) {
-  const apiUrl = `https://graph.facebook.com/${id}/picture?width=400&height=400&redirect=0&access_token=${env.PAGE_ACCESS_TOKEN}`;
-  console.log("📸 Fetch profile pic API:", apiUrl);
+                  const apiUrl = `https://graph.facebook.com/${id}/picture?width=400&height=400&redirect=0&access_token=${env.PAGE_ACCESS_TOKEN}`;
+                  console.log("📸 Fetch profile pic API:", apiUrl);
 
-  try {
-    const res = await fetch(apiUrl);
-    const data = await res.json();
+                  try {
+                    const res = await fetch(apiUrl);
+                    const data = await res.json();
 
-    // Debug log
-    console.log("📥 Profile API response:", JSON.stringify(data, null, 2));
-
-    // Хэрэв алдаа эсвэл хоосон бол default зураг буцаа
-    if (!data || !data.data || !data.data.url) {
-      console.warn("⚠️ Profile API зураг буцаасангүй:", JSON.stringify(data));
-      return "https://i.imgur.com/8Km9tLL.jpg"; // Default
-    }
-
-    // Хэрэв Facebook "is_silhouette": true гэж буцаавал бас default ашигла
-    if (data.data.is_silhouette === true) {
-      console.warn("⚠️ Profile private тул default зураг хэрэглэж байна:", id);
-      return "https://i.imgur.com/8Km9tLL.jpg";
-    }
-
-    console.log("✅ Profile pic URL for", id, ":", data.data.url);
-    return data.data.url;
-
-  } catch (err) {
-    console.error("❌ Profile API алдаа:", id, err.message);
-    return "https://i.imgur.com/8Km9tLL.jpg"; // Default
-  }
-}
+                    if (!data || !data.data || !data.data.url) {
+                      console.warn("⚠️ Profile API зураг буцаасангүй:", JSON.stringify(data));
+                      return "https://i.imgur.com/8Km9tLL.jpg";
+                    }
+                    if (data.data.is_silhouette === true) {
+                      console.warn("⚠️ Profile private тул default зураг хэрэглэж байна:", id);
+                      return "https://i.imgur.com/8Km9tLL.jpg";
+                    }
+                    console.log("✅ Profile pic URL for", id, ":", data.data.url);
+                    return data.data.url;
+                  } catch (err) {
+                    console.error("❌ Profile API алдаа:", id, err.message);
+                    return "https://i.imgur.com/8Km9tLL.jpg";
+                  }
+                }
 
                 try {
-                  const sunbaatarPic = await getProfilePic("100003275328756"); // Наранбаатар
-                  const gibsonPic = await getProfilePic("100003636016682");    // Нацагдорж
-                  const ganbatPic = await getProfilePic("100080558270234");    // Ганбат
-
-                  console.log("🖼️ Final picture URLs:", { sunbaatarPic, gibsonPic, ganbatPic });
+                  const sunbaatarPic = await getProfilePic("100003275328756");
+                  const gibsonPic = await getProfilePic("100003636016682");
+                  const ganbatPic = await getProfilePic("100080558270234");
 
                   const urlFb = `https://graph.facebook.com/v23.0/me/messages?access_token=${env.PAGE_ACCESS_TOKEN}`;
                   const bodyProfiles = {
@@ -199,6 +190,19 @@ export default {
                   [
                     { content_type: "text", title: "⬅️ Буцах", payload: "MENU_MAIN" }
                   ],
+                  env.PAGE_ACCESS_TOKEN
+                );
+              }
+
+              // --- 🆕 Шинэ нэмэлт: хэрэглэгчийн текстийг brain.js руу дамжуулах ---
+              else if (event.message && event.message.text) {
+                const userMessage = event.message.text;
+                const replyText = brain(userMessage);
+
+                await sendTextWithQuickReplies(
+                  senderId,
+                  replyText,
+                  [],
                   env.PAGE_ACCESS_TOKEN
                 );
               }
