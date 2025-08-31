@@ -52,12 +52,17 @@ export default {
                   senderId,
                   `${greeting}! 👋 Үндсэн цэсээс сонгоно уу 👇`,
                   [
-                    { content_type: "text", title: "🏢 Ажил үйлчилгээ", payload: "MENU_SERVICE" },
+                    { content_type: "text", title: "🏢 Ажил үйлчилгээ", payload: "SERVICE_MENU" },
                     { content_type: "text", title: "💻 Мэдээлэл / Зөвлөгөө", payload: "MENU_INFO" },
                     { content_type: "text", title: "📞 Холбоо барих", payload: "MENU_CONTACT" }
                   ],
                   env.PAGE_ACCESS_TOKEN
                 );
+              }
+
+              // --- 🆕 Ажил үйлчилгээ → студи үйлчилгээний сонголт ---
+              else if (payload === "SERVICE_MENU") {
+                await sendContactMenu(senderId, env.PAGE_ACCESS_TOKEN);
               }
 
               // --- Холбоо барих ---
@@ -185,7 +190,7 @@ export default {
                 );
               }
 
-              // --- 🆕 Brain chatbot integration ---
+              // --- 🧠 Brain chatbot integration ---
               else if (event.message && event.message.text) {
                 const userMessage = event.message.text;
                 const replyText = brain(userMessage) || "🤖 Уучлаарай, ойлгосонгүй ээ...";
@@ -193,7 +198,7 @@ export default {
                 await sendTextWithQuickReplies(
                   senderId,
                   replyText,
-                  null, // 🆕 quickReplies-г хоосон үед явуулахгүй
+                  null, // quickReplies-г хоосон үед явуулахгүй
                   env.PAGE_ACCESS_TOKEN
                 );
               }
@@ -229,7 +234,7 @@ async function sendTextWithQuickReplies(senderId, text, quickReplies, PAGE_ACCES
     message: { text }
   };
 
-  // 🆕 зөвхөн quickReplies байгаа үед нэмнэ
+  // зөвхөн quickReplies байгаа үед нэмнэ
   if (quickReplies && quickReplies.length > 0) {
     body.message.quick_replies = quickReplies;
   }
