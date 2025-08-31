@@ -3,65 +3,68 @@ export function normalize(text) {
 
   let t = text.toLowerCase().trim();
 
-  // Түгээмэл алдаатай бичлэгүүдийг зөв болгох mapping
+  // 🔑 Текст хувиргах dictionary (variation → зөв хэлбэр)
   const mapping = {
-    // --- өмнөх байгаа үлдээсэн дүрмүүд ---
-    "huue": "үү",
-    "hue": "үү",
-    "hoy": "үү",
-    "huuie": "үү",
-    "huuye": "үү",
-    "hooe": "үү",
-    "hoo": "үү",
-    "huve": "үү",
-    "huvve": "үү",
-    "huvvie": "үү",
-    "huvvyee": "үү",
-
-    // --- ТАНАЙХ variations ---
+    // --- Танайх variations ---
     "tanai": "танайх",
+    "tanaih": "танайх",
     "tnai": "танайх",
     "tnaih": "танайх",
     "tnay": "танайх",
     "tna": "танайх",
+    "ta nar": "танайх",
+    "taanars": "танайх",
+    "taanuus": "танайх",
+    "tanuus": "танайх",
+    "stud": "студи",
+    "studio": "студи",
 
-    // --- КЛИП variations ---
+    // --- Клип variations ---
     "clip": "клип",
     "klip": "клип",
     "clp": "клип",
     "klib": "клип",
     "clib": "клип",
-    "клиби": "клип",
-    "клиб": "клип",
+    "klipp": "клип",
+    "clippe": "клип",
 
-    // --- ХИЙДЭГ variations ---
-    "hiideg": "хийдэг",
-    "hiddeg": "хийдэг",
-    "hiidg": "хийдэг",
-    "hidg": "хийдэг",
-    "hdeg": "хийдэг",
-    "hddg": "хийдэг",
-    "heedeg": "хийдэг",
-    "хийдг": "хийдэг",
-    "хийдег": "хийдэг",
+    // --- Хий variations ---
+    "hiih": "хий",
+    "hiij": "хий",
+    "hiideg": "хий",
+    "hii": "хий",
+    "hi": "хий",
 
-    // --- ҮҮ variations ---
+    // --- Үү variations ---
     "uu": "үү",
     "vv": "үү",
     "u": "үү",
-    "yu": "үү",
     "y": "үү",
+    "yu": "үү",
     "ү": "үү",
-    "уу": "үү"
+    "уу": "үү",
+
+    // --- Бусад жишээ (huue, hoy гэх мэт) ---
+    "huue": "хөөе",
+    "hoy": "хөөе",
+    "huuie": "хөөе",
+    "hooe": "хөөе",
   };
 
-  // mapping dictionary-гээр солино
+  // mapping dictionary-д таарвал шууд орлуулна
   if (mapping[t]) {
     return mapping[t];
   }
 
-  // нэмэлт regex цэвэрлэгээ (emoji, punctuation, etc.)
-  t = t.replace(/[^a-zа-яөү\s]/gi, "");
+  // үг дотор таарч байвал солих
+  for (const key in mapping) {
+    if (t.includes(key)) {
+      t = t.replace(new RegExp(key, "g"), mapping[key]);
+    }
+  }
+
+  // unwanted тэмдэгтүүдийг цэвэрлэх (emojis, punctuation гэх мэт)
+  t = t.replace(/[^а-яөөүa-z0-9\\s]/gi, "");
 
   return t;
 }
