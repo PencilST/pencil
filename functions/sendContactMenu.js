@@ -16,6 +16,31 @@ export default async function sendContactMenu(senderId, PAGE_ACCESS_TOKEN) {
           content_type: "text",
           title: "👩‍🎨 Ажилчдын профайл",
           payload: "CONTACT_PROFILES"
+        },
+        {
+          content_type: "text",
+          title: "📱 ‍¼ ◍❕✨ ✩ ◌⠘",
+          payload: "STUDIO_PRODUCTION"
+        },
+        {
+          content_type: "text",
+          title: "😩 ✨ ✩ ◌⫀",
+          payload: "STUDIO_GRAPHIC"
+        },
+        {
+          content_type: "text",
+          title: "😉 ʀ�✡◎✠✮✟",
+          payload: "STUDEO_2D"
+        },
+        {
+          content_type: "text",
+          title: "😩 ✨ ✪❤✨",
+          payload: "STUDEO_3D"
+        },
+        {
+          content_type: "text",
+          title: "🖟 Солбоо",
+          payload: "STUDIO_POST"
         }
       ]
     }
