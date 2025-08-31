@@ -5,41 +5,41 @@ export default async function sendContactMenu(senderId, PAGE_ACCESS_TOKEN) {
     recipient: { id: senderId },
     messaging_type: "RESPONSE",
     message: {
-      text: "📞 Холбоо барих",
+      text: "🏢 Ажил үйлчилгээ",
       quick_replies: [
         {
           content_type: "text",
-          title: "🏢 Хаяг, дугаар",
+          title: "📞 Холбоо барих",
           payload: "CONTACT_ADDRESS"
         },
         {
           content_type: "text",
-          title: "👩‍🎨 Ажилчдын профайл",
+          title: "👤 Профайл, холбоосууд",
           payload: "CONTACT_PROFILES"
         },
         {
           content_type: "text",
-          title: "📱 ‍¼ ◍❕✨ ✩ ◌⠘",
+          title: "🎥 Зураг авалт",
           payload: "STUDIO_PRODUCTION"
         },
         {
           content_type: "text",
-          title: "😩 ✨ ✩ ◌⫀",
+          title: "🖼️ График дизайн",
           payload: "STUDIO_GRAPHIC"
         },
         {
           content_type: "text",
-          title: "😉 ʀ�✡◎✠✮✟",
-          payload: "STUDEO_2D"
+          title: "🖥️ 2D анимаци",
+          payload: "STUDIO_2D"
         },
         {
           content_type: "text",
-          title: "😩 ✨ ✪❤✨",
-          payload: "STUDEO_3D"
+          title: "🖥️ 3D анимаци",
+          payload: "STUDIO_3D"
         },
         {
           content_type: "text",
-          title: "🖟 Солбоо",
+          title: "🎞️ Пост-продакшн",
           payload: "STUDIO_POST"
         }
       ]
