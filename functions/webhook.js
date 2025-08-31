@@ -1,6 +1,6 @@
 import sendContactMenu from "./sendContactMenu.js";
 import setupPersistentMenu from "./setupPersistentMenu.js";
-import { brain } from "../cf-worker/src/brain.js"; // 🆕 Нэмсэн import
+import { brain } from "../cf-worker/src/brain.js"; // 🆕 import
 
 export default {
   async fetch(request, env) {
@@ -93,25 +93,16 @@ export default {
 
                 async function getProfilePic(id) {
                   const apiUrl = `https://graph.facebook.com/${id}/picture?width=400&height=400&redirect=0&access_token=${env.PAGE_ACCESS_TOKEN}`;
-                  console.log("📸 Fetch profile pic API:", apiUrl);
-
                   try {
                     const res = await fetch(apiUrl);
                     const data = await res.json();
-
-                    if (!data || !data.data || !data.data.url) {
-                      console.warn("⚠️ Profile API зураг буцаасангүй:", JSON.stringify(data));
-                      return "https://i.imgur.com/8Km9tLL.jpg";
+                    if (!data || !data.data || !data.data.url || data.data.is_silhouette === true) {
+                      return "https://i.imgur.com/8Km9tLL.jpg"; // Default
                     }
-                    if (data.data.is_silhouette === true) {
-                      console.warn("⚠️ Profile private тул default зураг хэрэглэж байна:", id);
-                      return "https://i.imgur.com/8Km9tLL.jpg";
-                    }
-                    console.log("✅ Profile pic URL for", id, ":", data.data.url);
                     return data.data.url;
                   } catch (err) {
                     console.error("❌ Profile API алдаа:", id, err.message);
-                    return "https://i.imgur.com/8Km9tLL.jpg";
+                    return "https://i.imgur.com/8Km9tLL.jpg"; // Default
                   }
                 }
 
@@ -194,15 +185,15 @@ export default {
                 );
               }
 
-              // --- 🆕 Шинэ нэмэлт: хэрэглэгчийн текстийг brain.js руу дамжуулах ---
+              // --- 🆕 Brain chatbot integration ---
               else if (event.message && event.message.text) {
                 const userMessage = event.message.text;
-                const replyText = brain(userMessage);
+                const replyText = brain(userMessage) || "🤖 Уучлаарай, ойлгосонгүй ээ...";
 
                 await sendTextWithQuickReplies(
                   senderId,
                   replyText,
-                  [],
+                  null, // 🆕 quickReplies-г хоосон үед явуулахгүй
                   env.PAGE_ACCESS_TOKEN
                 );
               }
@@ -235,8 +226,13 @@ async function sendTextWithQuickReplies(senderId, text, quickReplies, PAGE_ACCES
   const url = `https://graph.facebook.com/v23.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`;
   const body = {
     recipient: { id: senderId },
-    message: { text, quick_replies: quickReplies },
+    message: { text }
   };
+
+  // 🆕 зөвхөн quickReplies байгаа үед нэмнэ
+  if (quickReplies && quickReplies.length > 0) {
+    body.message.quick_replies = quickReplies;
+  }
 
   await fetch(url, {
     method: "POST",
