@@ -1,6 +1,7 @@
 import { normalize } from "./normalize.js";
 import { greet } from "./greet.js";
 import { faq } from "./faq.js";
+import { swear } from "./swear.js";
 
 export function brain(text) {
   const t = normalize(text);
@@ -11,7 +12,13 @@ export function brain(text) {
     return greetAnswer;
   }
 
-  // --- FAQ (жишээ: клип) ---
+  // --- Swear ---
+  const swearAnswer = swear(t);
+  if (swearAnswer) {
+    return swearAnswer;
+  }
+
+  // --- FAQ ---
   const faqAnswer = faq(t);
   if (faqAnswer) {
     return faqAnswer;
