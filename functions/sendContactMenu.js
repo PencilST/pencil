@@ -29,7 +29,7 @@ export default async function sendContactMenu(senderId, PAGE_ACCESS_TOKEN) {
         },
         {
           content_type: "text",
-          title: "😉 ʀ�✡◎✠✮✟",
+          title: "😉 ʀ�✡◎✠✮✟",
           payload: "STUDEO_2D"
         },
         {
