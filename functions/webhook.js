@@ -52,7 +52,7 @@ export default {
                   senderId,
                   `${greeting}! 👋 Үндсэн цэсээс сонгоно уу 👇`,
                   [
-                    { content_type: "text", title: "🏢 Ажил үйлчилгээ", payload: "SERVICE_MENU" },
+                    // 🏢 Ажил үйлчилгээ-г эндээс хассан
                     { content_type: "text", title: "💻 Мэдээлэл / Зөвлөгөө", payload: "MENU_INFO" },
                     { content_type: "text", title: "📞 Холбоо барих", payload: "MENU_CONTACT" }
                   ],
